@@ -1,0 +1,13 @@
+{
+  "name": "gemini-demo",
+  "version": "1.0.0",
+  "description": "VaultWrite - Local Markdown Editor & Sync Workspace",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx http-server -p 3000 -o"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

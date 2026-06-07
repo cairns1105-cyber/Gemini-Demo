@@ -3,33 +3,51 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gemini Demo | Connected to GitHub</title>
+    <title>VaultWrite | Local Markdown Editor & Sync</title>
     <meta
       name="description"
-      content="A premium landing page demonstrating successful connection with GitHub and automated CI/CD workflows."
+      content="A premium glassmorphic local Markdown editor that saves files directly to your computer and syncs with GitHub."
     />
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Marked Markdown Parser & Lucide Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
       :root {
-        --bg-dark: #090a0f;
-        --bg-card: rgba(18, 20, 29, 0.7);
-        --border-color: rgba(255, 255, 255, 0.08);
+        --bg-dark: #07080d;
+        --bg-card: rgba(15, 17, 28, 0.7);
+        --bg-sidebar: rgba(10, 11, 19, 0.85);
+        --border-color: rgba(255, 255, 255, 0.06);
+        --border-focus: rgba(99, 102, 241, 0.4);
         --text-primary: #f3f4f6;
         --text-secondary: #9ca3af;
-        --primary-glow: radial-gradient(
-          circle,
-          rgba(99, 102, 241, 0.15) 0%,
-          rgba(168, 85, 247, 0.05) 50%,
-          transparent 100%
-        );
+        --text-muted: #6b7280;
+
         --accent-purple: #a855f7;
         --accent-indigo: #6366f1;
         --accent-green: #10b981;
+        --accent-amber: #f59e0b;
+        --accent-red: #ef4444;
+
+        --gradient-primary: linear-gradient(135deg, #a855f7, #6366f1);
+        --gradient-success: linear-gradient(135deg, #10b981, #059669);
+        --gradient-warning: linear-gradient(135deg, #f59e0b, #d97706);
+
+        --primary-glow: radial-gradient(
+          circle,
+          rgba(99, 102, 241, 0.12) 0%,
+          rgba(168, 85, 247, 0.04) 50%,
+          transparent 100%
+        );
       }
 
       * {
@@ -42,21 +60,20 @@
         font-family: "Inter", sans-serif;
         background-color: var(--bg-dark);
         color: var(--text-primary);
-        min-height: 100vh;
+        height: 100vh;
+        overflow: hidden;
+        position: relative;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        overflow-x: hidden;
-        position: relative;
       }
 
-      /* Glowing background blobs */
+      /* Glowing background decorations */
       body::before {
         content: "";
         position: absolute;
-        width: 600px;
-        height: 600px;
-        top: -150px;
+        width: 800px;
+        height: 800px;
+        top: -200px;
         right: -100px;
         background: var(--primary-glow);
         z-index: -1;
@@ -66,66 +83,125 @@
       body::after {
         content: "";
         position: absolute;
-        width: 600px;
-        height: 600px;
-        bottom: -150px;
+        width: 800px;
+        height: 800px;
+        bottom: -200px;
         left: -100px;
         background: radial-gradient(
           circle,
-          rgba(168, 85, 247, 0.12) 0%,
-          rgba(99, 102, 241, 0.04) 50%,
+          rgba(168, 85, 247, 0.1) 0%,
+          rgba(99, 102, 241, 0.03) 50%,
           transparent 100%
         );
         z-index: -1;
         pointer-events: none;
       }
 
+      /* Custom Scrollbars */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 9999px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
       header {
-        max-width: 1200px;
-        width: 100%;
-        margin: 0 auto;
-        padding: 2rem;
+        background: rgba(10, 11, 19, 0.5);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border-color);
+        padding: 0.75rem 1.5rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        z-index: 10;
+        flex-shrink: 0;
+      }
+
+      .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
       }
 
       .logo {
         font-family: "Outfit", sans-serif;
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         font-weight: 800;
-        background: linear-gradient(135deg, #a855f7, #6366f1);
+        background: var(--gradient-primary);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         letter-spacing: -0.5px;
       }
 
-      .connection-badge {
+      .logo-icon {
+        color: var(--accent-purple);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .storage-badge {
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        background: rgba(16, 185, 129, 0.1);
-        border: 1px solid rgba(16, 185, 129, 0.2);
-        padding: 0.4rem 1rem;
+        padding: 0.4rem 0.85rem;
         border-radius: 9999px;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         font-weight: 500;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+      }
+
+      .storage-badge.connected {
+        background: rgba(16, 185, 129, 0.08);
+        border-color: rgba(16, 185, 129, 0.2);
         color: var(--accent-green);
+      }
+
+      .storage-badge.fallback {
+        background: rgba(245, 158, 11, 0.08);
+        border-color: rgba(245, 158, 11, 0.2);
+        color: var(--accent-amber);
       }
 
       .pulse {
         width: 8px;
         height: 8px;
-        background-color: var(--accent-green);
         border-radius: 50%;
-        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-        animation: pulse-animation 2s infinite;
+        position: relative;
       }
 
-      @keyframes pulse-animation {
+      .storage-badge.connected .pulse {
+        background-color: var(--accent-green);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+        animation: pulse-green 2s infinite;
+      }
+
+      .storage-badge.fallback .pulse {
+        background-color: var(--accent-amber);
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+        animation: pulse-amber 2s infinite;
+      }
+
+      @keyframes pulse-green {
         0% {
           transform: scale(0.95);
-          box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+          box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);
         }
         70% {
           transform: scale(1);
@@ -137,148 +213,48 @@
         }
       }
 
-      main {
-        max-width: 1200px;
-        width: 100%;
-        margin: 0 auto;
-        padding: 2rem;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-
-      .hero {
-        text-align: center;
-        margin-bottom: 4rem;
-      }
-
-      .hero h1 {
-        font-family: "Outfit", sans-serif;
-        font-size: 3.5rem;
-        font-weight: 800;
-        line-height: 1.15;
-        margin-bottom: 1.5rem;
-        letter-spacing: -1px;
-        background: linear-gradient(to right, #ffffff, #9ca3af);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-
-      .hero p {
-        font-size: 1.25rem;
-        color: var(--text-secondary);
-        max-width: 600px;
-        margin: 0 auto 2.5rem auto;
-        line-height: 1.6;
-      }
-
-      /* Glassmorphic Card Container */
-      .card-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-        margin-bottom: 3rem;
-      }
-
-      .card {
-        background: var(--bg-card);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid var(--border-color);
-        border-radius: 16px;
-        padding: 2rem;
-        transition:
-          transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-          border-color 0.3s ease,
-          box-shadow 0.3s ease;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.4), transparent);
-        transform: translateX(-100%);
-        transition: transform 0.5s ease;
-      }
-
-      .card:hover {
-        transform: translateY(-5px);
-        border-color: rgba(168, 85, 247, 0.25);
-        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-      }
-
-      .card:hover::before {
-        transform: translateX(100%);
-      }
-
-      .card-icon {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        width: 48px;
-        height: 48px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 1.5rem;
-        color: var(--accent-purple);
-      }
-
-      .card h3 {
-        font-family: "Outfit", sans-serif;
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 0.75rem;
-      }
-
-      .card p {
-        color: var(--text-secondary);
-        font-size: 0.95rem;
-        line-height: 1.5;
-      }
-
-      /* Call to Action Button */
-      .cta-container {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        flex-wrap: wrap;
+      @keyframes pulse-amber {
+        0% {
+          transform: scale(0.95);
+          box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5);
+        }
+        70% {
+          transform: scale(1);
+          box-shadow: 0 0 0 6px rgba(245, 158, 11, 0);
+        }
+        100% {
+          transform: scale(0.95);
+          box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+        }
       }
 
       .btn {
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        padding: 0.8rem 1.8rem;
-        border-radius: 10px;
-        font-size: 0.95rem;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
         font-weight: 600;
         text-decoration: none;
-        transition: all 0.2s ease;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         cursor: pointer;
+        border: 1px solid transparent;
       }
 
       .btn-primary {
-        background: linear-gradient(135deg, #a855f7, #6366f1);
+        background: var(--gradient-primary);
         color: white;
-        border: none;
-        box-shadow: 0 4px 20px -2px rgba(99, 102, 241, 0.4);
+        box-shadow: 0 4px 15px -3px rgba(99, 102, 241, 0.3);
       }
 
       .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 24px -2px rgba(99, 102, 241, 0.6);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px -3px rgba(99, 102, 241, 0.45);
       }
 
       .btn-secondary {
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(255, 255, 255, 0.04);
         color: var(--text-primary);
         border: 1px solid var(--border-color);
       }
@@ -288,170 +264,1459 @@
         border-color: rgba(255, 255, 255, 0.15);
       }
 
-      footer {
-        padding: 2rem;
-        border-top: 1px solid var(--border-color);
-        text-align: center;
-        font-size: 0.85rem;
-        color: var(--text-secondary);
+      .btn-icon {
+        padding: 0.5rem;
+        border-radius: 8px;
       }
 
-      .footer-links {
-        margin-top: 0.5rem;
+      /* Workspace Layout */
+      .app-container {
         display: flex;
-        justify-content: center;
-        gap: 1rem;
+        flex: 1;
+        overflow: hidden;
       }
 
-      .footer-links a {
+      /* Sidebar styling */
+      .sidebar {
+        width: 320px;
+        background: var(--bg-sidebar);
+        border-right: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+      }
+
+      .sidebar-search {
+        padding: 1.25rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .search-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .search-wrapper i {
+        position: absolute;
+        left: 0.75rem;
+        color: var(--text-muted);
+        pointer-events: none;
+      }
+
+      .search-input {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 0.55rem 0.75rem 0.55rem 2.25rem;
+        color: var(--text-primary);
+        font-family: inherit;
+        font-size: 0.85rem;
+        transition: all 0.2s ease;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: var(--border-focus);
+        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+      }
+
+      .sidebar-actions {
+        padding: 0.75rem 1.25rem;
+        display: flex;
+        gap: 0.5rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .notes-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .note-item {
+        background: transparent;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        padding: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        position: relative;
+      }
+
+      .note-item:hover {
+        background: rgba(255, 255, 255, 0.02);
+        border-color: rgba(255, 255, 255, 0.04);
+      }
+
+      .note-item.active {
+        background: rgba(99, 102, 241, 0.08);
+        border-color: rgba(99, 102, 241, 0.25);
+      }
+
+      .note-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .note-item-title {
+        font-family: "Outfit", sans-serif;
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex: 1;
+      }
+
+      .note-item-delete {
+        color: var(--text-muted);
+        opacity: 0;
+        transition: all 0.2s ease;
+        padding: 0.2rem;
+        border-radius: 4px;
+      }
+
+      .note-item:hover .note-item-delete {
+        opacity: 1;
+      }
+
+      .note-item-delete:hover {
+        color: var(--accent-red);
+        background: rgba(239, 68, 68, 0.1);
+      }
+
+      .note-item-snippet {
+        font-size: 0.8rem;
         color: var(--text-secondary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .note-item-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-top: 0.25rem;
+      }
+
+      .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-muted);
+        gap: 0.75rem;
+        flex: 1;
+      }
+
+      /* Editor & Preview Split Pane */
+      .editor-workspace {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .editor-toolbar {
+        height: 50px;
+        border-bottom: 1px solid var(--border-color);
+        background: rgba(10, 11, 19, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 1.5rem;
+        flex-shrink: 0;
+      }
+
+      .active-file-info {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .active-file-title {
+        font-family: "Outfit", sans-serif;
+        font-weight: 600;
+        font-size: 1rem;
+        color: var(--text-primary);
+      }
+
+      .save-status {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
+
+      .save-status.saved {
+        color: var(--accent-green);
+      }
+
+      .pane-container {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* Split pane styling */
+      .pane {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .pane-header {
+        padding: 0.5rem 1.5rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        border-bottom: 1px solid var(--border-color);
+        background: rgba(10, 11, 19, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .editor-pane {
+        border-right: 1px solid var(--border-color);
+      }
+
+      .markdown-textarea {
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        border: none;
+        resize: none;
+        padding: 1.5rem;
+        font-family: "Fira Code", monospace;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: var(--text-primary);
+        outline: none;
+        tab-size: 4;
+      }
+
+      .preview-pane {
+        background: rgba(0, 0, 0, 0.05);
+      }
+
+      .preview-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 2rem;
+        line-height: 1.6;
+        font-size: 1rem;
+        color: var(--text-primary);
+      }
+
+      /* Beautiful Markdown Preview Typography */
+      .preview-content h1,
+      .preview-content h2,
+      .preview-content h3,
+      .preview-content h4 {
+        font-family: "Outfit", sans-serif;
+        color: #ffffff;
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+        font-weight: 700;
+      }
+
+      .preview-content h1 {
+        font-size: 1.8rem;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 0.4rem;
+      }
+
+      .preview-content h2 {
+        font-size: 1.4rem;
+      }
+      .preview-content h3 {
+        font-size: 1.2rem;
+      }
+
+      .preview-content p {
+        margin-bottom: 1rem;
+        color: var(--text-secondary);
+      }
+
+      .preview-content blockquote {
+        border-left: 4px solid var(--accent-indigo);
+        background: rgba(99, 102, 241, 0.04);
+        padding: 0.75rem 1rem;
+        margin: 1rem 0;
+        border-radius: 0 6px 6px 0;
+        font-style: italic;
+      }
+
+      .preview-content ul,
+      .preview-content ol {
+        margin-bottom: 1rem;
+        padding-left: 1.5rem;
+        color: var(--text-secondary);
+      }
+
+      .preview-content li {
+        margin-bottom: 0.35rem;
+      }
+
+      .preview-content code {
+        font-family: "Fira Code", monospace;
+        background: rgba(255, 255, 255, 0.08);
+        padding: 0.2rem 0.4rem;
+        border-radius: 4px;
+        font-size: 0.85em;
+        color: var(--accent-purple);
+      }
+
+      .preview-content pre {
+        background: rgba(10, 11, 19, 0.8);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1.25rem 0;
+        overflow-x: auto;
+      }
+
+      .preview-content pre code {
+        background: transparent;
+        padding: 0;
+        color: #e5e7eb;
+        font-size: 0.9em;
+      }
+
+      .preview-content a {
+        color: var(--accent-indigo);
         text-decoration: none;
         transition: color 0.2s ease;
       }
 
-      .footer-links a:hover {
+      .preview-content a:hover {
+        color: var(--accent-purple);
+        text-decoration: underline;
+      }
+
+      .preview-content hr {
+        border: none;
+        border-top: 1px solid var(--border-color);
+        margin: 1.5rem 0;
+      }
+
+      .preview-content table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.25rem 0;
+      }
+
+      .preview-content th,
+      .preview-content td {
+        border: 1px solid var(--border-color);
+        padding: 0.6rem 0.8rem;
+        text-align: left;
+      }
+
+      .preview-content th {
+        background: rgba(255, 255, 255, 0.04);
+        font-weight: 600;
+      }
+
+      /* Control & Sync Panel (Right sidebar) */
+      .sync-panel {
+        width: 340px;
+        background: var(--bg-sidebar);
+        border-left: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+        overflow-y: auto;
+      }
+
+      .panel-section {
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .panel-section-title {
+        font-family: "Outfit", sans-serif;
+        font-weight: 700;
+        font-size: 0.95rem;
+        letter-spacing: 0.02em;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: white;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+      }
+
+      .stat-card {
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      .stat-val {
+        font-family: "Outfit", sans-serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #ffffff;
+      }
+
+      .stat-lbl {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+      }
+
+      /* Git sync styling */
+      .git-flow {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .repo-card {
+        background: rgba(99, 102, 241, 0.04);
+        border: 1px solid rgba(99, 102, 241, 0.15);
+        border-radius: 8px;
+        padding: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .repo-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+        font-size: 0.8rem;
+        overflow: hidden;
+      }
+
+      .repo-title {
+        font-weight: 600;
+        color: white;
+      }
+
+      .repo-url {
+        color: var(--text-muted);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      .git-terminal {
+        background: #020305;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        padding: 0.85rem;
+        font-family: "Fira Code", monospace;
+        font-size: 0.75rem;
+        color: #38bdf8;
+        position: relative;
+      }
+
+      .terminal-header {
+        display: flex;
+        justify-content: space-between;
+        color: var(--text-muted);
+        font-size: 0.7rem;
+        margin-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        padding-bottom: 0.35rem;
+      }
+
+      .terminal-lines {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        user-select: text;
+      }
+
+      .terminal-line {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .terminal-prompt {
+        color: var(--accent-purple);
+        user-select: none;
+      }
+
+      .terminal-cmd {
+        color: #e2e8f0;
+      }
+
+      .terminal-comment {
+        color: #64748b;
+      }
+
+      .btn-copy {
+        position: absolute;
+        right: 0.5rem;
+        top: 0.4rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 0.25rem;
+        border-radius: 4px;
+        cursor: pointer;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+      }
+
+      .btn-copy:hover {
+        background: rgba(255, 255, 255, 0.12);
+        color: white;
+      }
+
+      /* Notification Banner */
+      .toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: rgba(15, 17, 28, 0.9);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 1rem 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        transform: translateY(150%);
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 100;
+        max-width: 350px;
+      }
+
+      .toast.show {
+        transform: translateY(0);
+      }
+
+      .toast-success {
+        border-color: rgba(16, 185, 129, 0.3);
+      }
+      .toast-info {
+        border-color: rgba(99, 102, 241, 0.3);
+      }
+      .toast-warning {
+        border-color: rgba(245, 158, 11, 0.3);
+      }
+      .toast-error {
+        border-color: rgba(239, 68, 68, 0.3);
+      }
+
+      .toast i {
+        font-size: 1.25rem;
+      }
+      .toast-success i {
+        color: var(--accent-green);
+      }
+      .toast-info i {
+        color: var(--accent-indigo);
+      }
+      .toast-warning i {
+        color: var(--accent-amber);
+      }
+      .toast-error i {
+        color: var(--accent-red);
+      }
+
+      .toast-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+      }
+
+      .toast-title {
+        font-family: "Outfit", sans-serif;
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: white;
+      }
+
+      .toast-msg {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+      }
+
+      /* Guide screen when no directory or note is loaded */
+      .workspace-placeholder {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 3rem;
+        gap: 1.5rem;
+      }
+
+      .hero-icon-wrapper {
+        width: 80px;
+        height: 80px;
+        border-radius: 24px;
+        background: rgba(99, 102, 241, 0.05);
+        border: 1px solid rgba(99, 102, 241, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--accent-indigo);
+        margin-bottom: 0.5rem;
+        box-shadow: 0 8px 32px -8px rgba(99, 102, 241, 0.3);
+      }
+
+      .workspace-placeholder h2 {
+        font-family: "Outfit", sans-serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .workspace-placeholder p {
+        color: var(--text-secondary);
+        max-width: 480px;
+        line-height: 1.6;
+        font-size: 0.95rem;
+      }
+
+      .features-row {
+        display: flex;
+        gap: 1.5rem;
+        margin: 1rem 0;
+        max-width: 600px;
+      }
+
+      .feature-box {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 1rem;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .feature-box i {
         color: var(--accent-purple);
       }
 
-      @media (max-width: 768px) {
-        .hero h1 {
-          font-size: 2.5rem;
-        }
-        .card-grid {
-          grid-template-columns: 1fr;
-        }
+      .feature-box h4 {
+        color: white;
+        font-weight: 600;
+      }
+
+      .feature-box p {
+        color: var(--text-muted);
+        font-size: 0.75rem;
       }
     </style>
   </head>
   <body>
     <header>
-      <div class="logo">Gemini Demo</div>
-      <div id="status-badge" class="connection-badge">
-        <span class="pulse"></span>
-        GitHub Actions Active
+      <div class="logo-container">
+        <div class="logo-icon">
+          <i data-lucide="feather"></i>
+        </div>
+        <div class="logo">VaultWrite</div>
+      </div>
+
+      <div class="header-actions">
+        <div id="status-badge" class="storage-badge fallback">
+          <span class="pulse"></span>
+          <span id="status-text">Web Sandbox Mode</span>
+        </div>
+        <button id="btn-select-dir" class="btn btn-secondary">
+          <i data-lucide="folder-open"></i>
+          Connect Local Folder
+        </button>
       </div>
     </header>
 
-    <main>
-      <section class="hero">
-        <h1>Connected to GitHub</h1>
+    <div class="app-container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-search">
+          <div class="search-wrapper">
+            <i data-lucide="search" size="16"></i>
+            <input
+              type="text"
+              id="search-notes"
+              class="search-input"
+              placeholder="Search notes..."
+            />
+          </div>
+        </div>
+
+        <div class="sidebar-actions">
+          <button id="btn-new-note" class="btn btn-primary" style="flex: 1">
+            <i data-lucide="plus" size="16"></i>
+            New Note
+          </button>
+        </div>
+
+        <div class="notes-list" id="notes-list">
+          <!-- Populated by JS -->
+        </div>
+      </aside>
+
+      <!-- Editor / Placeholder Workspace -->
+      <main id="editor-workspace" class="editor-workspace" style="display: none">
+        <div class="editor-toolbar">
+          <div class="active-file-info">
+            <i data-lucide="file-text" size="18" style="color: var(--accent-indigo)"></i>
+            <span id="active-file-title" class="active-file-title">welcome.md</span>
+            <div id="save-status" class="save-status">
+              <i data-lucide="cloud-off" size="12"></i>
+              <span>Local draft</span>
+            </div>
+          </div>
+          <div>
+            <button
+              id="btn-delete-active"
+              class="btn btn-secondary btn-icon"
+              title="Delete file"
+              style="color: var(--accent-red); border-color: rgba(239, 68, 68, 0.15)"
+            >
+              <i data-lucide="trash-2" size="16"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="pane-container">
+          <!-- Markdown Editor Pane -->
+          <section class="pane editor-pane">
+            <div class="pane-header">
+              <span>Markdown Editor</span>
+              <i data-lucide="code" size="14"></i>
+            </div>
+            <textarea
+              id="markdown-textarea"
+              class="markdown-textarea"
+              placeholder="# Heading 1&#10;&#10;Start typing markdown here..."
+            ></textarea>
+          </section>
+
+          <!-- Compiled Preview Pane -->
+          <section class="pane preview-pane">
+            <div class="pane-header">
+              <span>Live Preview</span>
+              <i data-lucide="eye" size="14"></i>
+            </div>
+            <div id="preview-content" class="preview-content">
+              <!-- Compiled markdown inserts here -->
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <!-- Placeholder screen if no directory connected & no note selected -->
+      <section id="workspace-placeholder" class="workspace-placeholder">
+        <div class="hero-icon-wrapper">
+          <i data-lucide="feather" size="36"></i>
+        </div>
+        <h2>Welcome to VaultWrite</h2>
         <p>
-          Automated Continuous Integration and Continuous Deployment pipeline configured for this
-          workspace.
+          A secure, ultra-fast local editor that lets you write documents on your computer's storage
+          and upload them directly to your GitHub repository.
         </p>
 
-        <div class="cta-container">
-          <a
-            href="https://github.com/cairns1105-cyber/Gemini-Demo"
-            target="_blank"
-            class="btn btn-primary"
-            id="btn-github-repo"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.167 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.138 20.164 22 16.418 22 12c0-5.523-4.477-10-10-10z"
-              />
-            </svg>
-            View Repository
-          </a>
-          <a
-            href="https://github.com/cairns1105-cyber"
-            target="_blank"
-            class="btn btn-secondary"
-            id="btn-github-profile"
-          >
-            GitHub Profile
-          </a>
+        <div class="features-row">
+          <div class="feature-box">
+            <i data-lucide="hard-drive" size="20"></i>
+            <h4>Local Disk Storage</h4>
+            <p>Save notes directly as markdown (.md) files in your workspace folder.</p>
+          </div>
+          <div class="feature-box">
+            <i data-lucide="github" size="20"></i>
+            <h4>Git Integration Ready</h4>
+            <p>Keep your data in sync with your repositories on GitHub.</p>
+          </div>
+          <div class="feature-box">
+            <i data-lucide="shield-check" size="20"></i>
+            <h4>100% Privacy</h4>
+            <p>Your notes never touch third-party servers. Stored completely on your machine.</p>
+          </div>
         </div>
+
+        <button id="btn-placeholder-connect" class="btn btn-primary">
+          <i data-lucide="folder-open"></i>
+          Connect Workspace Folder
+        </button>
       </section>
 
-      <section class="card-grid">
-        <!-- Card 1 -->
-        <div class="card">
-          <div class="card-icon">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <polyline points="16 18 22 12 16 6"></polyline>
-              <polyline points="8 6 2 12 8 18"></polyline>
-            </svg>
+      <!-- Sync Panel -->
+      <aside class="sync-panel">
+        <!-- Document Stats Section -->
+        <div class="panel-section">
+          <div class="panel-section-title">
+            <i data-lucide="bar-chart-3" size="16"></i>
+            <span>Document Metrics</span>
           </div>
-          <h3>Prettier Formatting</h3>
-          <p>
-            Ensures all code files follow a unified style guide. Runs checks on push to catch any
-            spacing or alignment discrepancies.
-          </p>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-val" id="stat-words">0</span>
+              <span class="stat-lbl">Words</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-val" id="stat-chars">0</span>
+              <span class="stat-lbl">Characters</span>
+            </div>
+            <div class="stat-card" style="grid-column: span 2">
+              <span class="stat-val" id="stat-read-time">0m</span>
+              <span class="stat-lbl">Est. Reading Time</span>
+            </div>
+          </div>
         </div>
 
-        <!-- Card 2 -->
-        <div class="card">
-          <div class="card-icon">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-              <polyline points="22 4 12 14.01 9 11.01"></polyline>
-            </svg>
+        <!-- Git Sync Section -->
+        <div class="panel-section">
+          <div class="panel-section-title">
+            <i data-lucide="git-branch" size="16"></i>
+            <span>GitHub Sync Helper</span>
           </div>
-          <h3>HTML Hint Linting</h3>
-          <p>
-            Performs static analysis on HTML structure to enforce standard patterns, unclosed tags,
-            duplicate attributes, and other structural rules.
-          </p>
-        </div>
+          <div class="git-flow">
+            <div class="repo-card">
+              <i
+                data-lucide="github"
+                size="24"
+                style="color: var(--accent-indigo); flex-shrink: 0"
+              ></i>
+              <div class="repo-details">
+                <span class="repo-title">Gemini-Demo</span>
+                <span class="repo-url">cairns1105-cyber/Gemini-Demo</span>
+              </div>
+            </div>
 
-        <!-- Card 3 -->
-        <div class="card">
-          <div class="card-icon">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path
-                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
-              ></path>
-              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-              <line x1="12" y1="22.08" x2="12" y2="12"></line>
-            </svg>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4">
+              To upload your saved data from this computer to GitHub, open your terminal (PowerShell
+              or Git Bash) and run these commands:
+            </p>
+
+            <div class="git-terminal">
+              <div class="terminal-header">
+                <span>Git Sync Terminal</span>
+                <span>PowerShell</span>
+              </div>
+              <button class="btn-copy" id="btn-copy-terminal" title="Copy Commands">
+                <i data-lucide="copy" size="12"></i>
+              </button>
+              <div class="terminal-lines" id="git-commands-list">
+                <div class="terminal-line">
+                  <span class="terminal-prompt">&gt;</span>
+                  <span class="terminal-cmd">cd "c:\Users\sukol\OneDrive\Desktop\Gemini Demo"</span>
+                </div>
+                <div class="terminal-line">
+                  <span class="terminal-prompt">&gt;</span>
+                  <span class="terminal-cmd">git add .</span>
+                </div>
+                <div class="terminal-line">
+                  <span class="terminal-prompt">&gt;</span>
+                  <span class="terminal-cmd">git commit -m "Update notes via VaultWrite"</span>
+                </div>
+                <div class="terminal-line">
+                  <span class="terminal-prompt">&gt;</span>
+                  <span class="terminal-cmd">git push origin main</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem">
+              <button
+                id="btn-download-backup"
+                class="btn btn-secondary"
+                style="font-size: 0.75rem; justify-content: center"
+              >
+                <i data-lucide="download" size="14"></i>
+                Export All Data (JSON)
+              </button>
+            </div>
           </div>
-          <h3>GitHub Pages Deploy</h3>
-          <p>
-            Fully automated deployments. When code is pushed to the main branch and passes checks,
-            the live website updates instantly.
-          </p>
         </div>
-      </section>
-    </main>
+      </aside>
+    </div>
 
-    <footer>
-      <p>&copy; 2026 Gemini Demo. Designed with modern aesthetics.</p>
-      <div class="footer-links">
-        <a href="https://github.com/cairns1105-cyber" target="_blank">@cairns1105-cyber</a>
-        <span>&bull;</span>
-        <a href="https://github.com/cairns1105-cyber/Gemini-Demo" target="_blank">Source Code</a>
+    <!-- Notification Toast -->
+    <div id="toast" class="toast toast-info">
+      <i id="toast-icon" data-lucide="info"></i>
+      <div class="toast-content">
+        <span id="toast-title" class="toast-title">Title</span>
+        <span id="toast-msg" class="toast-msg">Message body here.</span>
       </div>
-    </footer>
+    </div>
+
+    <script>
+      // Initialize Lucide Icons
+      lucide.createIcons();
+
+      // State Management
+      let dirHandle = null;
+      let notes = []; // Holds arrays of { id, title, content, handle, lastModified }
+      let activeNoteId = null;
+      let isSaving = false;
+      let saveTimeout = null;
+
+      // DOM Elements
+      const btnSelectDir = document.getElementById("btn-select-dir");
+      const btnPlaceholderConnect = document.getElementById("btn-placeholder-connect");
+      const statusBadge = document.getElementById("status-badge");
+      const statusText = document.getElementById("status-text");
+      const notesList = document.getElementById("notes-list");
+      const searchNotes = document.getElementById("search-notes");
+      const btnNewNote = document.getElementById("btn-new-note");
+
+      const editorWorkspace = document.getElementById("editor-workspace");
+      const workspacePlaceholder = document.getElementById("workspace-placeholder");
+      const activeFileTitle = document.getElementById("active-file-title");
+      const saveStatus = document.getElementById("save-status");
+      const markdownTextarea = document.getElementById("markdown-textarea");
+      const previewContent = document.getElementById("preview-content");
+      const btnDeleteActive = document.getElementById("btn-delete-active");
+
+      const statWords = document.getElementById("stat-words");
+      const statChars = document.getElementById("stat-chars");
+      const statReadTime = document.getElementById("stat-read-time");
+      const btnCopyTerminal = document.getElementById("btn-copy-terminal");
+      const btnDownloadBackup = document.getElementById("btn-download-backup");
+
+      // Setup Event Listeners
+      btnSelectDir.addEventListener("click", selectDirectory);
+      btnPlaceholderConnect.addEventListener("click", selectDirectory);
+      btnNewNote.addEventListener("click", createNewNote);
+      searchNotes.addEventListener("input", renderNotesList);
+      markdownTextarea.addEventListener("input", handleEditorInput);
+      btnDeleteActive.addEventListener("click", deleteActiveNote);
+      btnCopyTerminal.addEventListener("click", copyGitCommands);
+      btnDownloadBackup.addEventListener("click", downloadAllBackup);
+
+      // Configure Marked Options
+      marked.setOptions({
+        gfm: true,
+        breaks: true,
+        headerIds: false,
+        mangle: false,
+      });
+
+      // Show toast notification
+      function showToast(title, msg, type = "info") {
+        const toast = document.getElementById("toast");
+        const icon = document.getElementById("toast-icon");
+        const toastTitle = document.getElementById("toast-title");
+        const toastMsg = document.getElementById("toast-msg");
+
+        toast.className = `toast toast-${type}`;
+
+        let iconName = "info";
+        if (type === "success") iconName = "check-circle";
+        if (type === "warning") iconName = "alert-triangle";
+        if (type === "error") iconName = "x-circle";
+
+        icon.setAttribute("data-lucide", iconName);
+        toastTitle.textContent = title;
+        toastMsg.textContent = msg;
+
+        lucide.createIcons();
+
+        toast.classList.add("show");
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 4000);
+      }
+
+      // Read notes from Selected Directory
+      async function selectDirectory() {
+        try {
+          if (!window.showDirectoryPicker) {
+            showToast(
+              "API Not Supported",
+              "File System Access API is not supported in this browser. Running in local sandbox fallback mode.",
+              "warning"
+            );
+            initSandboxMode();
+            return;
+          }
+
+          dirHandle = await window.showDirectoryPicker({
+            mode: "readwrite",
+          });
+
+          // Verify permission
+          const options = { mode: "readwrite" };
+          if ((await dirHandle.queryPermission(options)) !== "granted") {
+            if ((await dirHandle.requestPermission(options)) !== "granted") {
+              showToast(
+                "Permission Denied",
+                "Write permission is required to save notes to your hard drive.",
+                "error"
+              );
+              return;
+            }
+          }
+
+          // Read markdown files
+          notes = [];
+          for await (const entry of dirHandle.values()) {
+            if (entry.kind === "file" && entry.name.endsWith(".md")) {
+              const file = await entry.getFile();
+              const text = await file.text();
+              notes.push({
+                id: entry.name,
+                title: entry.name.replace(/\.md$/, ""),
+                content: text,
+                handle: entry,
+                lastModified: file.lastModified,
+              });
+            }
+          }
+
+          // Sort by last modified date (newest first)
+          notes.sort((a, b) => b.lastModified - a.lastModified);
+
+          updateStorageUI(true);
+          renderNotesList();
+          showToast(
+            "Folder Connected",
+            `Loaded ${notes.length} markdown files from your storage.`,
+            "success"
+          );
+
+          // Select first note if any exist
+          if (notes.length > 0) {
+            selectNote(notes[0].id);
+          } else {
+            showPlaceholder();
+          }
+        } catch (err) {
+          console.error(err);
+          if (err.name !== "AbortError") {
+            showToast(
+              "Connection Error",
+              "Could not open selected folder. Running in sandbox mode.",
+              "error"
+            );
+            initSandboxMode();
+          }
+        }
+      }
+
+      // LocalStorage Sandbox Mode (Fallback)
+      function initSandboxMode() {
+        dirHandle = null;
+        updateStorageUI(false);
+
+        const localData = localStorage.getItem("vaultwrite_sandbox_notes");
+        if (localData) {
+          try {
+            notes = JSON.parse(localData);
+          } catch (e) {
+            notes = [];
+          }
+        } else {
+          // Add default welcome note
+          notes = [
+            {
+              id: "welcome_note",
+              title: "Welcome to VaultWrite",
+              content: `# Welcome to VaultWrite ✍️\n\nThis app allows you to create markdown files stored on your local computer.\n\n### Running in Sandbox Mode\nSince you are using sandbox mode, your files are saved in the browser's \`localStorage\`. To write directly to files in your repository folder, click **Connect Local Folder** in the top right.\n\n### How to sync to GitHub:\n1. Keep your notes inside your local repository folder.\n2. Run the Git commands listed in the right-side sync helper.`,
+              lastModified: Date.now(),
+            },
+          ];
+          saveSandboxNotes();
+        }
+
+        renderNotesList();
+        if (notes.length > 0) {
+          selectNote(notes[0].id);
+        } else {
+          showPlaceholder();
+        }
+      }
+
+      function saveSandboxNotes() {
+        localStorage.setItem("vaultwrite_sandbox_notes", JSON.stringify(notes));
+      }
+
+      function updateStorageUI(connected) {
+        if (connected) {
+          statusBadge.className = "storage-badge connected";
+          statusText.textContent = "Connected Folder";
+          btnSelectDir.innerHTML = '<i data-lucide="check"></i> Connected';
+          btnSelectDir.className = "btn btn-secondary";
+        } else {
+          statusBadge.className = "storage-badge fallback";
+          statusText.textContent = "Web Sandbox Mode";
+          btnSelectDir.innerHTML = '<i data-lucide="folder-open"></i> Connect Folder';
+          btnSelectDir.className = "btn btn-secondary";
+        }
+        lucide.createIcons();
+      }
+
+      // Render List of Notes in Sidebar
+      function renderNotesList() {
+        const query = searchNotes.value.toLowerCase();
+        notesList.innerHTML = "";
+
+        const filteredNotes = notes.filter(
+          (n) => n.title.toLowerCase().includes(query) || n.content.toLowerCase().includes(query)
+        );
+
+        if (filteredNotes.length === 0) {
+          notesList.innerHTML = `
+            <div class="empty-state">
+              <i data-lucide="folder-search" size="24"></i>
+              <p style="font-size: 0.8rem;">No notes found</p>
+            </div>
+          `;
+          lucide.createIcons();
+          return;
+        }
+
+        filteredNotes.forEach((note) => {
+          const item = document.createElement("div");
+          item.className = `note-item ${note.id === activeNoteId ? "active" : ""}`;
+          item.addEventListener("click", () => selectNote(note.id));
+
+          // Simple snippet extraction
+          const cleanText = note.content.replace(/[#*`\-_[\]]/g, "").trim();
+          const snippet = cleanText.substring(0, 50) || "Empty document";
+          const dateStr = new Date(note.lastModified).toLocaleDateString(undefined, {
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+
+          item.innerHTML = `
+            <div class="note-item-header">
+              <span class="note-item-title">${note.title}</span>
+              <button class="note-item-delete" data-id="${note.id}" title="Delete file">
+                <i data-lucide="trash-2" size="14"></i>
+              </button>
+            </div>
+            <span class="note-item-snippet">${snippet}</span>
+            <div class="note-item-meta">
+              <span>${dateStr}</span>
+              <span>${dirHandle ? ".md file" : "sandbox"}</span>
+            </div>
+          `;
+
+          // Bind delete action
+          item.querySelector(".note-item-delete").addEventListener("click", (e) => {
+            e.stopPropagation();
+            const id = e.currentTarget.getAttribute("data-id");
+            deleteNote(id);
+          });
+
+          notesList.appendChild(item);
+        });
+
+        lucide.createIcons();
+      }
+
+      // Select and display a note
+      async function selectNote(id) {
+        activeNoteId = id;
+        const note = notes.find((n) => n.id === id);
+        if (!note) return;
+
+        // Visual toggle
+        workspacePlaceholder.style.display = "none";
+        editorWorkspace.style.display = "flex";
+
+        activeFileTitle.textContent = dirHandle ? note.id : `${note.title}.md`;
+        markdownTextarea.value = note.content;
+
+        updateSaveStatusIndicator(true);
+        updatePreview();
+        updateMetrics();
+
+        // Highlight active sidebar item
+        document.querySelectorAll(".note-item").forEach((el) => el.classList.remove("active"));
+        renderNotesList();
+      }
+
+      // Create a New Note
+      async function createNewNote() {
+        let title = prompt("Enter note title:");
+        if (!title) return;
+        title = title.trim();
+        if (!title) return;
+
+        // Enforce valid filename characteristics
+        title = title.replace(/[\/\\?%*:|"<>\.]/g, "-");
+        const filename = `${title}.md`;
+
+        // Check duplicates
+        if (notes.some((n) => n.title.toLowerCase() === title.toLowerCase())) {
+          showToast("Title Exists", "A note with that name already exists.", "warning");
+          return;
+        }
+
+        const initialContent = `# ${title}\n\nStart writing your note...`;
+
+        if (dirHandle) {
+          try {
+            // Write direct to file picker folder
+            const fileHandle = await dirHandle.getFileHandle(filename, { create: true });
+            const writable = await fileHandle.createWritable();
+            await writable.write(initialContent);
+            await writable.close();
+
+            const newNote = {
+              id: filename,
+              title: title,
+              content: initialContent,
+              handle: fileHandle,
+              lastModified: Date.now(),
+            };
+
+            notes.unshift(newNote);
+            renderNotesList();
+            selectNote(newNote.id);
+            showToast("File Created", `Saved ${filename} to disk.`, "success");
+          } catch (err) {
+            console.error(err);
+            showToast("Save Error", "Could not create file on disk.", "error");
+          }
+        } else {
+          // Sandbox local storage mode
+          const newNote = {
+            id: `note_${Date.now()}`,
+            title: title,
+            content: initialContent,
+            lastModified: Date.now(),
+          };
+
+          notes.unshift(newNote);
+          saveSandboxNotes();
+          renderNotesList();
+          selectNote(newNote.id);
+          showToast("Draft Created", "Created new note in sandbox.", "success");
+        }
+      }
+
+      // Delete a Note
+      async function deleteNote(id) {
+        if (!confirm("Are you sure you want to delete this note? This action cannot be undone.")) {
+          return;
+        }
+
+        const noteIndex = notes.findIndex((n) => n.id === id);
+        if (noteIndex === -1) return;
+
+        const note = notes[noteIndex];
+
+        if (dirHandle) {
+          try {
+            await dirHandle.removeEntry(note.id);
+            notes.splice(noteIndex, 1);
+            showToast("File Deleted", `${note.id} removed from disk.`, "success");
+          } catch (err) {
+            console.error(err);
+            showToast("Delete Error", "Could not delete file from disk.", "error");
+            return;
+          }
+        } else {
+          notes.splice(noteIndex, 1);
+          saveSandboxNotes();
+          showToast("Draft Deleted", "Removed note from sandbox.", "success");
+        }
+
+        renderNotesList();
+
+        if (activeNoteId === id) {
+          if (notes.length > 0) {
+            selectNote(notes[0].id);
+          } else {
+            showPlaceholder();
+          }
+        }
+      }
+
+      function deleteActiveNote() {
+        if (activeNoteId) {
+          deleteNote(activeNoteId);
+        }
+      }
+
+      function showPlaceholder() {
+        activeNoteId = null;
+        workspacePlaceholder.style.display = "flex";
+        editorWorkspace.style.display = "none";
+
+        statWords.textContent = "0";
+        statChars.textContent = "0";
+        statReadTime.textContent = "0m";
+      }
+
+      // Handling editor keyboard inputs with autosave debounce
+      function handleEditorInput() {
+        const note = notes.find((n) => n.id === activeNoteId);
+        if (!note) return;
+
+        note.content = markdownTextarea.value;
+        note.lastModified = Date.now();
+
+        updateSaveStatusIndicator(false);
+        updatePreview();
+        updateMetrics();
+
+        // Autosave debounce
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(() => {
+          saveActiveNoteContent();
+        }, 800);
+      }
+
+      // Save Note Content to Storage
+      async function saveActiveNoteContent() {
+        const note = notes.find((n) => n.id === activeNoteId);
+        if (!note) return;
+
+        if (dirHandle && note.handle) {
+          try {
+            isSaving = true;
+            const writable = await note.handle.createWritable();
+            await writable.write(note.content);
+            await writable.close();
+
+            updateSaveStatusIndicator(true);
+            isSaving = false;
+          } catch (err) {
+            console.error(err);
+            showToast(
+              "Autosave Error",
+              "Failed to save changes to disk. Verify folder permissions.",
+              "error"
+            );
+            saveStatus.innerHTML =
+              '<i data-lucide="alert-circle" size="12" style="color: var(--accent-red)"></i> <span style="color: var(--accent-red)">Write Failed</span>';
+            lucide.createIcons();
+          }
+        } else {
+          // Sandbox Mode saving
+          saveSandboxNotes();
+          updateSaveStatusIndicator(true);
+        }
+      }
+
+      // Update save status UI text
+      function updateSaveStatusIndicator(isSaved) {
+        if (isSaved) {
+          saveStatus.className = "save-status saved";
+          saveStatus.innerHTML = dirHandle
+            ? '<i data-lucide="check-circle-2" size="12"></i> <span>Saved to disk</span>'
+            : '<i data-lucide="check" size="12"></i> <span>Saved to sandbox</span>';
+        } else {
+          saveStatus.className = "save-status";
+          saveStatus.innerHTML =
+            '<i data-lucide="loader" size="12" style="animation: spin 1s linear infinite;"></i> <span>Saving...</span>';
+        }
+        lucide.createIcons();
+      }
+
+      // Render Markdown preview
+      function updatePreview() {
+        const content = markdownTextarea.value;
+        previewContent.innerHTML = marked.parse(content);
+      }
+
+      // Document Statistics Calculations
+      function updateMetrics() {
+        const text = markdownTextarea.value.trim();
+        if (!text) {
+          statWords.textContent = "0";
+          statChars.textContent = "0";
+          statReadTime.textContent = "0m";
+          return;
+        }
+
+        const words = text.split(/\s+/).filter((word) => word.length > 0).length;
+        const chars = text.length;
+        const wpm = 200; // average reading speed
+        const minutes = Math.ceil(words / wpm);
+
+        statWords.textContent = words.toLocaleString();
+        statChars.textContent = chars.toLocaleString();
+        statReadTime.textContent = `${minutes}m`;
+      }
+
+      // Copy terminal commands to clipboard
+      function copyGitCommands() {
+        const commands = [
+          'cd "c:\\Users\\sukol\\OneDrive\\Desktop\\Gemini Demo"',
+          "git add .",
+          'git commit -m "Update notes via VaultWrite"',
+          "git push origin main",
+        ].join("\n");
+
+        navigator.clipboard
+          .writeText(commands)
+          .then(() => {
+            showToast("Copied to Clipboard", "Git commands copied successfully.", "success");
+          })
+          .catch((err) => {
+            showToast("Copy Failed", "Unable to copy text.", "error");
+          });
+      }
+
+      // Download backup JSON
+      function downloadAllBackup() {
+        const dataStr =
+          "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(notes, null, 2));
+        const downloadAnchor = document.createElement("a");
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", "vaultwrite_notes_backup.json");
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+        showToast("Backup Exported", "All notes downloaded as JSON backup.", "success");
+      }
+
+      // Page initialisation
+      window.addEventListener("DOMContentLoaded", () => {
+        // Fallback automatically to LocalStorage sandbox mode on start
+        initSandboxMode();
+      });
+    </script>
   </body>
 </html>
