@@ -882,65 +882,6 @@
             <div class="detail-title" id="hero-title">The Frost Archmage</div>
           </div>
 
-          <p class="detail-desc" id="hero-desc">Lore details go here.</p>
-
-          <!-- Stats -->
-          <div>
-            <div class="detail-section-title">
-              <i data-lucide="bar-chart-2" size="14"></i>
-              <span>Combat Performance</span>
-            </div>
-            <div class="stats-list">
-              <div class="stat-row">
-                <div class="stat-info">
-                  <span>Attack Power</span>
-                  <span id="val-atk">0</span>
-                </div>
-                <div class="stat-bar-outer">
-                  <div class="stat-bar-inner stat-atk" id="bar-atk"></div>
-                </div>
-              </div>
-              <div class="stat-row">
-                <div class="stat-info">
-                  <span>Defense / Armor</span>
-                  <span id="val-def">0</span>
-                </div>
-                <div class="stat-bar-outer">
-                  <div class="stat-bar-inner stat-def" id="bar-def"></div>
-                </div>
-              </div>
-              <div class="stat-row">
-                <div class="stat-info">
-                  <span>Spell / Magic</span>
-                  <span id="val-mag">0</span>
-                </div>
-                <div class="stat-bar-outer">
-                  <div class="stat-bar-inner stat-mag" id="bar-mag"></div>
-                </div>
-              </div>
-              <div class="stat-row">
-                <div class="stat-info">
-                  <span>Speed / Agility</span>
-                  <span id="val-spd">0</span>
-                </div>
-                <div class="stat-bar-outer">
-                  <div class="stat-bar-inner stat-spd" id="bar-spd"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Abilities -->
-          <div>
-            <div class="detail-section-title">
-              <i data-lucide="zap" size="14"></i>
-              <span>Signature Skills</span>
-            </div>
-            <div class="abilities-list" id="abilities-list">
-              <!-- Loaded by JS -->
-            </div>
-          </div>
-
           <!-- Time Scout Panel (Pip exclusive) -->
           <div id="time-scout-panel" style="display: none">
             <div class="detail-section-title" style="margin-top: 1.5rem">
@@ -1125,16 +1066,6 @@
       const heroBadge = document.getElementById("hero-badge");
       const heroName = document.getElementById("hero-name");
       const heroTitle = document.getElementById("hero-title");
-      const heroDesc = document.getElementById("hero-desc");
-      const valAtk = document.getElementById("val-atk");
-      const valDef = document.getElementById("val-def");
-      const valMag = document.getElementById("val-mag");
-      const valSpd = document.getElementById("val-spd");
-      const barAtk = document.getElementById("bar-atk");
-      const barDef = document.getElementById("bar-def");
-      const barMag = document.getElementById("bar-mag");
-      const barSpd = document.getElementById("bar-spd");
-      const abilitiesList = document.getElementById("abilities-list");
       const btnSummonAction = document.getElementById("btn-summon-action");
 
       // Hero Database
@@ -1144,152 +1075,48 @@
           title: "Archmage of the Frozen Veil",
           role: "Frost Mage",
           class: "card-mage",
-          desc: "Zephyr commands the absolute cold, conjuring towering glaciers to trap enemies and casting ice shards that shatter target shields instantly.",
-          stats: { atk: 60, def: 40, mag: 95, spd: 70 },
-          skills: [
-            {
-              name: "Glacial Spike",
-              desc: "Fires an icy shard dealing huge magical damage.",
-              icon: "wand-2",
-            },
-            {
-              name: "Blizzard Storm",
-              desc: "Slows and freezes all enemies in a designated circle.",
-              icon: "wind",
-            },
-          ],
         },
         chrono: {
           name: "Kaelen",
           title: "Weaver of Light and Shadow",
           role: "Chrono Mage",
           class: "card-chrono",
-          desc: "A mystic controlling the flow of space-time. Kaelen balances holy light spells and dark void energy to accelerate allies and implode enemy formations.",
-          stats: { atk: 50, def: 45, mag: 98, spd: 85 },
-          skills: [
-            {
-              name: "Time Warp",
-              desc: "Doubles speed and skill recovery rate for 8 seconds.",
-              icon: "clock",
-            },
-            {
-              name: "Void Singularity",
-              desc: "Pulls enemies together and detonates dark magic.",
-              icon: "orbit",
-            },
-          ],
         },
         ranger: {
           name: "Sylvia",
           title: "Guardian of the Wild Kin",
           role: "Beast Ranger",
           class: "card-ranger",
-          desc: "Sylvia fights in perfect harmony with the forest wild. Supported by her owl and bear companions, her wind-guided arrows never miss.",
-          stats: { atk: 80, def: 50, mag: 55, spd: 90 },
-          skills: [
-            { name: "Falcon Mark", desc: "Marks target, increasing critical damage.", icon: "eye" },
-            {
-              name: "Grizzly Guard",
-              desc: "Summons a spectral bear to absorb damage.",
-              icon: "shield-alert",
-            },
-          ],
         },
         archer: {
           name: "Pip",
           title: "Forest Shroom Scout",
           role: "Mushroom Archer",
           class: "card-archer",
-          desc: "Equipped with poison spore arrows and camouflaged in his large mushroom cap, Pip is a stealthy hunter who traps enemies off-guard.",
-          stats: { atk: 75, def: 35, mag: 45, spd: 95 },
-          skills: [
-            {
-              name: "Spore Cloud",
-              desc: "Blinds enemies and deals damage over time.",
-              icon: "cloud-fog",
-            },
-            {
-              name: "Numbing Arrow",
-              desc: "Pinpoint shot that immobilizes the target.",
-              icon: "target",
-            },
-          ],
         },
         shinobi: {
           name: "Ren",
           title: "Wraith of the Violet Clan",
           role: "Shadow Shinobi",
           class: "card-shinobi",
-          desc: "Ren blinks across the battlefield using shadow stepping. Wielding violet chakra blades, he strikes with deadly critical damage.",
-          stats: { atk: 90, def: 30, mag: 60, spd: 98 },
-          skills: [
-            { name: "Shadow Step", desc: "Blinks behind the furthest enemy target.", icon: "move" },
-            {
-              name: "Shuriken Storm",
-              desc: "Throws multiple exploding shadow shurikens.",
-              icon: "fan",
-            },
-          ],
         },
         warrior: {
           name: "Garrick",
           title: "The Unbreakable Bastion",
           role: "Iron Warrior",
           class: "card-warrior",
-          desc: "Clad in legendary spiky crimson armor, Garrick crushes frontline lines with massive sweeping claymore blows and iron defenses.",
-          stats: { atk: 85, def: 90, mag: 20, spd: 50 },
-          skills: [
-            {
-              name: "Heavy Cleave",
-              desc: "Sweeping strike dealing high damage to close enemies.",
-              icon: "swords",
-            },
-            {
-              name: "Bastion Stance",
-              desc: "Blocks all damage for a short duration.",
-              icon: "shield",
-            },
-          ],
         },
         paladin: {
           name: "Aurelia",
           title: "Champion of the Holy Light",
           role: "Aegis Paladin",
           class: "card-paladin",
-          desc: "Shielding her comrades with a crystalline aegis shield, Aurelia combines heavy physical defense with holy light recovery incantations.",
-          stats: { atk: 65, def: 95, mag: 70, spd: 55 },
-          skills: [
-            {
-              name: "Holy Shield",
-              desc: "Generates a barrier protecting allies from projectiles.",
-              icon: "shield-check",
-            },
-            {
-              name: "Light Sanctuary",
-              desc: "Creates a dome area that heals allies over time.",
-              icon: "heart",
-            },
-          ],
         },
         dragon: {
           name: "Ignis",
           title: "Lord of the Dragon Fire",
           role: "Dragon Vanguard",
           class: "card-dragon",
-          desc: "Harnessing ancient dragon flame, Ignis ignites his broadsword to unleash fiery slashes, moving with dragon-winged speed.",
-          stats: { atk: 95, def: 75, mag: 65, spd: 75 },
-          skills: [
-            {
-              name: "Inferno Cleave",
-              desc: "Engulfs the battlefield in burning flames.",
-              icon: "flame",
-            },
-            {
-              name: "Dragon Call",
-              desc: "Stuns enemies in an area with a roar.",
-              icon: "volume-2",
-            },
-          ],
         },
       };
 
@@ -1352,37 +1179,6 @@
         heroName.textContent = hero.name;
         heroTitle.textContent = hero.title;
         heroBadge.textContent = hero.role;
-        heroDesc.textContent = hero.desc;
-
-        valAtk.textContent = hero.stats.atk;
-        valDef.textContent = hero.stats.def;
-        valMag.textContent = hero.stats.mag;
-        valSpd.textContent = hero.stats.spd;
-
-        // Animate stats bars
-        setTimeout(() => {
-          barAtk.style.width = `${hero.stats.atk}%`;
-          barDef.style.width = `${hero.stats.def}%`;
-          barMag.style.width = `${hero.stats.mag}%`;
-          barSpd.style.width = `${hero.stats.spd}%`;
-        }, 50);
-
-        // Load skills
-        abilitiesList.innerHTML = "";
-        hero.skills.forEach((skill) => {
-          const item = document.createElement("div");
-          item.className = "ability-item";
-          item.innerHTML = `
-            <div class="ability-icon">
-              <i data-lucide="${skill.icon}" size="16"></i>
-            </div>
-            <div class="ability-details">
-              <span class="ability-name">${skill.name}</span>
-              <span class="ability-desc">${skill.desc}</span>
-            </div>
-          `;
-          abilitiesList.appendChild(item);
-        });
 
         // Setup Summon click action
         btnSummonAction.innerHTML = `<i data-lucide="sparkles"></i> Summon ${hero.name}`;
