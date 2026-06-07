@@ -1,0 +1,35 @@
+name: CI Validation
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Lint & Format Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          # Since we don't have a package-lock.json, we can ignore cache-dependency-path or not use caching.
+          # But let's keep it simple: no package.json is needed, we just run tools via npx directly.
+
+      - name: Check Formatting (Prettier)
+        run: |
+          npx prettier@latest --check "**/*.{html,css,json,md}"
+
+      - name: Lint HTML (HTMLHint)
+        run: |
+          npx htmlhint@latest "**/*.html"
