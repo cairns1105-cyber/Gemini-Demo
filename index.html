@@ -3,51 +3,38 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VaultWrite | Local Markdown Editor & Sync</title>
+    <title>The Legendary Adventurers Convene | Guild Showcase</title>
     <meta
       name="description"
-      content="A premium glassmorphic local Markdown editor that saves files directly to your computer and syncs with GitHub."
+      content="An interactive guild showcase and character selection dashboard based on the Legendary Adventurers Convene."
     />
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Cinzel:wght@700;800&display=swap"
       rel="stylesheet"
     />
 
-    <!-- Marked Markdown Parser & Lucide Icons -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
       :root {
-        --bg-dark: #07080d;
-        --bg-card: rgba(15, 17, 28, 0.7);
-        --bg-sidebar: rgba(10, 11, 19, 0.85);
-        --border-color: rgba(255, 255, 255, 0.06);
-        --border-focus: rgba(99, 102, 241, 0.4);
+        --bg-dark: #09080d;
+        --border-color: rgba(255, 255, 255, 0.08);
+        --border-glow: rgba(247, 147, 30, 0.4);
         --text-primary: #f3f4f6;
-        --text-secondary: #9ca3af;
-        --text-muted: #6b7280;
+        --text-secondary: #d1d5db;
+        --text-muted: #9ca3af;
 
-        --accent-purple: #a855f7;
-        --accent-indigo: #6366f1;
-        --accent-green: #10b981;
-        --accent-amber: #f59e0b;
-        --accent-red: #ef4444;
+        --color-gold-light: #fcee21;
+        --color-gold-dark: #f7931e;
+        --gradient-gold: linear-gradient(135deg, var(--color-gold-light), var(--color-gold-dark));
 
-        --gradient-primary: linear-gradient(135deg, #a855f7, #6366f1);
-        --gradient-success: linear-gradient(135deg, #10b981, #059669);
-        --gradient-warning: linear-gradient(135deg, #f59e0b, #d97706);
-
-        --primary-glow: radial-gradient(
-          circle,
-          rgba(99, 102, 241, 0.12) 0%,
-          rgba(168, 85, 247, 0.04) 50%,
-          transparent 100%
-        );
+        --bg-glass: rgba(18, 16, 26, 0.75);
+        --glow-shadow: 0 0 25px rgba(247, 147, 30, 0.25);
       }
 
       * {
@@ -60,65 +47,32 @@
         font-family: "Inter", sans-serif;
         background-color: var(--bg-dark);
         color: var(--text-primary);
-        height: 100vh;
-        overflow: hidden;
+        min-height: 100vh;
+        overflow-x: hidden;
         position: relative;
         display: flex;
         flex-direction: column;
       }
 
-      /* Glowing background decorations */
+      /* Premium Background */
       body::before {
         content: "";
         position: absolute;
-        width: 800px;
-        height: 800px;
-        top: -200px;
-        right: -100px;
-        background: var(--primary-glow);
+        inset: 0;
+        background:
+          radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 80%),
+          radial-gradient(circle at 10% 20%, rgba(168, 85, 247, 0.05) 0%, transparent 50%),
+          radial-gradient(circle at 90% 80%, rgba(247, 147, 30, 0.04) 0%, transparent 60%);
         z-index: -1;
         pointer-events: none;
-      }
-
-      body::after {
-        content: "";
-        position: absolute;
-        width: 800px;
-        height: 800px;
-        bottom: -200px;
-        left: -100px;
-        background: radial-gradient(
-          circle,
-          rgba(168, 85, 247, 0.1) 0%,
-          rgba(99, 102, 241, 0.03) 50%,
-          transparent 100%
-        );
-        z-index: -1;
-        pointer-events: none;
-      }
-
-      /* Custom Scrollbars */
-      ::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-      }
-      ::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 9999px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.2);
       }
 
       header {
-        background: rgba(10, 11, 19, 0.5);
+        background: rgba(10, 8, 15, 0.7);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
         border-bottom: 1px solid var(--border-color);
-        padding: 0.75rem 1.5rem;
+        padding: 1rem 2rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -134,820 +88,714 @@
 
       .logo {
         font-family: "Outfit", sans-serif;
-        font-size: 1.4rem;
-        font-weight: 800;
-        background: var(--gradient-primary);
+        font-size: 1.25rem;
+        font-weight: 700;
+        background: var(--gradient-gold);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         letter-spacing: -0.5px;
       }
 
       .logo-icon {
-        color: var(--accent-purple);
+        color: var(--color-gold-dark);
         display: flex;
         align-items: center;
         justify-content: center;
       }
 
-      .header-actions {
+      .view-controls {
         display: flex;
-        align-items: center;
-        gap: 1rem;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--border-color);
+        padding: 0.25rem;
+        border-radius: 8px;
+        gap: 0.25rem;
       }
 
-      .storage-badge {
+      .btn-view {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        padding: 0.4rem 1rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        border-radius: 6px;
+        cursor: pointer;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        padding: 0.4rem 0.85rem;
-        border-radius: 9999px;
-        font-size: 0.8rem;
-        font-weight: 500;
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        gap: 0.4rem;
+        transition: all 0.2s ease;
+      }
+
+      .btn-view:hover {
+        color: white;
+      }
+
+      .btn-view.active {
+        background: var(--gradient-gold);
+        color: #0d0a08;
+        box-shadow: 0 2px 8px rgba(247, 147, 30, 0.3);
+      }
+
+      /* Title Replicated exactly */
+      .title-container {
+        text-align: center;
+        padding: 2rem 1rem 1rem 1rem;
+        flex-shrink: 0;
+      }
+
+      .title-banner {
+        font-family: "Cinzel", serif;
+        font-size: 2.8rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        background: var(--gradient-gold);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 1px;
+        position: relative;
+        display: inline-block;
+        /* Replicate the thick brown border/stroke from the screenshot */
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 1px #4e2908);
+        margin-bottom: 0.5rem;
+      }
+
+      @media (max-width: 768px) {
+        .title-banner {
+          font-size: 1.8rem;
+        }
+      }
+
+      .title-subtitle {
+        font-family: "Outfit", sans-serif;
+        font-size: 0.95rem;
+        color: var(--text-muted);
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      /* Main content layout */
+      .main-workspace {
+        flex: 1;
+        display: flex;
+        overflow: hidden;
+        position: relative;
+        padding: 1rem 2rem 2rem 2rem;
+        gap: 2rem;
+      }
+
+      @media (max-width: 1024px) {
+        .main-workspace {
+          flex-direction: column;
+          overflow-y: auto;
+          padding: 1rem;
+        }
+      }
+
+      /* Display area for views */
+      .view-container {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* VIEW 1: Illustration View */
+      .illustration-view {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        background-color: #020203;
+      }
+
+      .illustration-wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 1100px;
+        aspect-ratio: 1000/500;
+        background-image: url("assets/adventurers.jpg");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        overflow: hidden;
+      }
+
+      /* Hotspot triggers overlaying characters */
+      .hotspot {
+        position: absolute;
+        cursor: pointer;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 5;
         transition: all 0.3s ease;
       }
 
-      .storage-badge.connected {
-        background: rgba(16, 185, 129, 0.08);
-        border-color: rgba(16, 185, 129, 0.2);
-        color: var(--accent-green);
-      }
-
-      .storage-badge.fallback {
-        background: rgba(245, 158, 11, 0.08);
-        border-color: rgba(245, 158, 11, 0.2);
-        color: var(--accent-amber);
-      }
-
-      .pulse {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        position: relative;
-      }
-
-      .storage-badge.connected .pulse {
-        background-color: var(--accent-green);
-        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-        animation: pulse-green 2s infinite;
-      }
-
-      .storage-badge.fallback .pulse {
-        background-color: var(--accent-amber);
-        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
-        animation: pulse-amber 2s infinite;
-      }
-
-      @keyframes pulse-green {
-        0% {
-          transform: scale(0.95);
-          box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);
-        }
-        70% {
-          transform: scale(1);
-          box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
-        }
-        100% {
-          transform: scale(0.95);
-          box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
-        }
-      }
-
-      @keyframes pulse-amber {
-        0% {
-          transform: scale(0.95);
-          box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5);
-        }
-        70% {
-          transform: scale(1);
-          box-shadow: 0 0 0 6px rgba(245, 158, 11, 0);
-        }
-        100% {
-          transform: scale(0.95);
-          box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
-        }
-      }
-
-      .btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem 1rem;
-        border-radius: 8px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        text-decoration: none;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        cursor: pointer;
-        border: 1px solid transparent;
-      }
-
-      .btn-primary {
-        background: var(--gradient-primary);
-        color: white;
-        box-shadow: 0 4px 15px -3px rgba(99, 102, 241, 0.3);
-      }
-
-      .btn-primary:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 20px -3px rgba(99, 102, 241, 0.45);
-      }
-
-      .btn-secondary {
-        background: rgba(255, 255, 255, 0.04);
-        color: var(--text-primary);
-        border: 1px solid var(--border-color);
-      }
-
-      .btn-secondary:hover {
-        background: rgba(255, 255, 255, 0.08);
-        border-color: rgba(255, 255, 255, 0.15);
-      }
-
-      .btn-icon {
-        padding: 0.5rem;
-        border-radius: 8px;
-      }
-
-      /* Workspace Layout */
-      .app-container {
-        display: flex;
-        flex: 1;
-        overflow: hidden;
-      }
-
-      /* Sidebar styling */
-      .sidebar {
-        width: 320px;
-        background: var(--bg-sidebar);
-        border-right: 1px solid var(--border-color);
-        display: flex;
-        flex-direction: column;
-        flex-shrink: 0;
-      }
-
-      .sidebar-search {
-        padding: 1.25rem;
-        border-bottom: 1px solid var(--border-color);
-      }
-
-      .search-wrapper {
-        position: relative;
-        display: flex;
-        align-items: center;
-      }
-
-      .search-wrapper i {
+      /* Visual magic circle under feet of character when hovered */
+      .magic-circle {
         position: absolute;
-        left: 0.75rem;
-        color: var(--text-muted);
-        pointer-events: none;
-      }
-
-      .search-input {
-        width: 100%;
-        background: rgba(0, 0, 0, 0.2);
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        padding: 0.55rem 0.75rem 0.55rem 2.25rem;
-        color: var(--text-primary);
-        font-family: inherit;
-        font-size: 0.85rem;
-        transition: all 0.2s ease;
-      }
-
-      .search-input:focus {
-        outline: none;
-        border-color: var(--border-focus);
-        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
-      }
-
-      .sidebar-actions {
-        padding: 0.75rem 1.25rem;
-        display: flex;
-        gap: 0.5rem;
-        border-bottom: 1px solid var(--border-color);
-      }
-
-      .notes-list {
-        flex: 1;
-        overflow-y: auto;
-        padding: 0.75rem;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-
-      .note-item {
-        background: transparent;
-        border: 1px solid transparent;
-        border-radius: 8px;
-        padding: 0.85rem;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        display: flex;
-        flex-direction: column;
-        gap: 0.4rem;
-        position: relative;
-      }
-
-      .note-item:hover {
-        background: rgba(255, 255, 255, 0.02);
-        border-color: rgba(255, 255, 255, 0.04);
-      }
-
-      .note-item.active {
-        background: rgba(99, 102, 241, 0.08);
-        border-color: rgba(99, 102, 241, 0.25);
-      }
-
-      .note-item-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .note-item-title {
-        font-family: "Outfit", sans-serif;
-        font-weight: 600;
-        font-size: 0.95rem;
-        color: var(--text-primary);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        flex: 1;
-      }
-
-      .note-item-delete {
-        color: var(--text-muted);
+        bottom: -20px;
+        width: 120px;
+        height: 40px;
+        background: radial-gradient(ellipse, rgba(247, 147, 30, 0.2) 0%, transparent 70%);
+        border: 2px solid rgba(247, 147, 30, 0.3);
+        border-radius: 50%;
+        transform: rotateX(75deg) scale(0);
         opacity: 0;
-        transition: all 0.2s ease;
-        padding: 0.2rem;
-        border-radius: 4px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        pointer-events: none;
+        box-shadow: 0 0 15px rgba(247, 147, 30, 0.5);
       }
 
-      .note-item:hover .note-item-delete {
+      /* Magic runes spinning inside circle */
+      .magic-circle::before {
+        content: "";
+        position: absolute;
+        inset: -6px;
+        border: 1px dashed rgba(247, 147, 30, 0.6);
+        border-radius: 50%;
+        animation: spin 8s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .hotspot:hover .magic-circle {
+        transform: rotateX(75deg) scale(1);
         opacity: 1;
       }
 
-      .note-item-delete:hover {
-        color: var(--accent-red);
-        background: rgba(239, 68, 68, 0.1);
+      /* Hotspot Positionings on the 1000x500 Canvas */
+      .hs-mage {
+        left: 27%;
+        top: 20%;
+        width: 15%;
+        height: 45%;
+      }
+      .hs-chrono {
+        left: 57%;
+        top: 20%;
+        width: 14%;
+        height: 45%;
+      }
+      .hs-ranger {
+        left: 77%;
+        top: 12%;
+        width: 14%;
+        height: 45%;
+      }
+      .hs-archer {
+        left: 12%;
+        top: 46%;
+        width: 16%;
+        height: 50%;
+      }
+      .hs-shinobi {
+        left: 29%;
+        top: 48%;
+        width: 14%;
+        height: 46%;
+      }
+      .hs-warrior {
+        left: 44%;
+        top: 48%;
+        width: 15%;
+        height: 48%;
+      }
+      .hs-paladin {
+        left: 59%;
+        top: 50%;
+        width: 16%;
+        height: 46%;
+      }
+      .hs-dragon {
+        left: 74%;
+        top: 46%;
+        width: 17%;
+        height: 50%;
       }
 
-      .note-item-snippet {
-        font-size: 0.8rem;
-        color: var(--text-secondary);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+      /* Customize magic circle colors for classes */
+      .hs-mage .magic-circle {
+        border-color: rgba(99, 102, 241, 0.6);
+        background: radial-gradient(ellipse, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
+        box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+      }
+      .hs-mage .magic-circle::before {
+        border-color: rgba(99, 102, 241, 0.8);
       }
 
-      .note-item-meta {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        margin-top: 0.25rem;
+      .hs-chrono .magic-circle {
+        border-color: rgba(168, 85, 247, 0.6);
+        background: radial-gradient(ellipse, rgba(168, 85, 247, 0.3) 0%, transparent 70%);
+        box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+      }
+      .hs-chrono .magic-circle::before {
+        border-color: rgba(168, 85, 247, 0.8);
       }
 
-      .empty-state {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: 2rem;
-        color: var(--text-muted);
-        gap: 0.75rem;
-        flex: 1;
+      .hs-ranger .magic-circle {
+        border-color: rgba(245, 158, 11, 0.6);
+        background: radial-gradient(ellipse, rgba(245, 158, 11, 0.3) 0%, transparent 70%);
+        box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
+      }
+      .hs-ranger .magic-circle::before {
+        border-color: rgba(245, 158, 11, 0.8);
       }
 
-      /* Editor & Preview Split Pane */
-      .editor-workspace {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        background: rgba(0, 0, 0, 0.1);
-        overflow: hidden;
+      .hs-archer .magic-circle {
+        border-color: rgba(16, 185, 129, 0.6);
+        background: radial-gradient(ellipse, rgba(16, 185, 129, 0.3) 0%, transparent 70%);
+        box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+      }
+      .hs-archer .magic-circle::before {
+        border-color: rgba(16, 185, 129, 0.8);
       }
 
-      .editor-toolbar {
-        height: 50px;
-        border-bottom: 1px solid var(--border-color);
-        background: rgba(10, 11, 19, 0.3);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 1.5rem;
-        flex-shrink: 0;
+      .hs-shinobi .magic-circle {
+        border-color: rgba(139, 92, 246, 0.6);
+        background: radial-gradient(ellipse, rgba(139, 92, 246, 0.3) 0%, transparent 70%);
+        box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+      }
+      .hs-shinobi .magic-circle::before {
+        border-color: rgba(139, 92, 246, 0.8);
       }
 
-      .active-file-info {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
+      .hs-warrior .magic-circle {
+        border-color: rgba(239, 68, 68, 0.6);
+        background: radial-gradient(ellipse, rgba(239, 68, 68, 0.3) 0%, transparent 70%);
+        box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+      }
+      .hs-warrior .magic-circle::before {
+        border-color: rgba(239, 68, 68, 0.8);
       }
 
-      .active-file-title {
-        font-family: "Outfit", sans-serif;
-        font-weight: 600;
-        font-size: 1rem;
-        color: var(--text-primary);
+      .hs-paladin .magic-circle {
+        border-color: rgba(14, 165, 233, 0.6);
+        background: radial-gradient(ellipse, rgba(14, 165, 233, 0.3) 0%, transparent 70%);
+        box-shadow: 0 0 15px rgba(14, 165, 233, 0.5);
+      }
+      .hs-paladin .magic-circle::before {
+        border-color: rgba(14, 165, 233, 0.8);
       }
 
-      .save-status {
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
+      .hs-dragon .magic-circle {
+        border-color: rgba(220, 38, 38, 0.7);
+        background: radial-gradient(ellipse, rgba(220, 38, 38, 0.4) 0%, transparent 70%);
+        box-shadow: 0 0 15px rgba(220, 38, 38, 0.6);
+      }
+      .hs-dragon .magic-circle::before {
+        border-color: rgba(220, 38, 38, 0.9);
       }
 
-      .save-status.saved {
-        color: var(--accent-green);
-      }
-
-      .pane-container {
-        display: flex;
-        flex: 1;
-        overflow: hidden;
-        position: relative;
-      }
-
-      /* Split pane styling */
-      .pane {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        overflow: hidden;
-      }
-
-      .pane-header {
-        padding: 0.5rem 1.5rem;
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--text-muted);
-        border-bottom: 1px solid var(--border-color);
-        background: rgba(10, 11, 19, 0.15);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-
-      .editor-pane {
-        border-right: 1px solid var(--border-color);
-      }
-
-      .markdown-textarea {
-        flex: 1;
-        width: 100%;
-        height: 100%;
-        background: transparent;
-        border: none;
-        resize: none;
-        padding: 1.5rem;
-        font-family: "Fira Code", monospace;
-        font-size: 0.95rem;
-        line-height: 1.6;
-        color: var(--text-primary);
-        outline: none;
-        tab-size: 4;
-      }
-
-      .preview-pane {
-        background: rgba(0, 0, 0, 0.05);
-      }
-
-      .preview-content {
-        flex: 1;
-        overflow-y: auto;
-        padding: 2rem;
-        line-height: 1.6;
-        font-size: 1rem;
-        color: var(--text-primary);
-      }
-
-      /* Beautiful Markdown Preview Typography */
-      .preview-content h1,
-      .preview-content h2,
-      .preview-content h3,
-      .preview-content h4 {
-        font-family: "Outfit", sans-serif;
-        color: #ffffff;
-        margin-top: 1.5rem;
-        margin-bottom: 0.75rem;
-        font-weight: 700;
-      }
-
-      .preview-content h1 {
-        font-size: 1.8rem;
-        border-bottom: 1px solid var(--border-color);
-        padding-bottom: 0.4rem;
-      }
-
-      .preview-content h2 {
-        font-size: 1.4rem;
-      }
-      .preview-content h3 {
-        font-size: 1.2rem;
-      }
-
-      .preview-content p {
-        margin-bottom: 1rem;
-        color: var(--text-secondary);
-      }
-
-      .preview-content blockquote {
-        border-left: 4px solid var(--accent-indigo);
-        background: rgba(99, 102, 241, 0.04);
-        padding: 0.75rem 1rem;
-        margin: 1rem 0;
-        border-radius: 0 6px 6px 0;
-        font-style: italic;
-      }
-
-      .preview-content ul,
-      .preview-content ol {
-        margin-bottom: 1rem;
-        padding-left: 1.5rem;
-        color: var(--text-secondary);
-      }
-
-      .preview-content li {
-        margin-bottom: 0.35rem;
-      }
-
-      .preview-content code {
-        font-family: "Fira Code", monospace;
-        background: rgba(255, 255, 255, 0.08);
-        padding: 0.2rem 0.4rem;
-        border-radius: 4px;
-        font-size: 0.85em;
-        color: var(--accent-purple);
-      }
-
-      .preview-content pre {
-        background: rgba(10, 11, 19, 0.8);
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        padding: 1rem;
-        margin: 1.25rem 0;
-        overflow-x: auto;
-      }
-
-      .preview-content pre code {
-        background: transparent;
-        padding: 0;
-        color: #e5e7eb;
-        font-size: 0.9em;
-      }
-
-      .preview-content a {
-        color: var(--accent-indigo);
-        text-decoration: none;
-        transition: color 0.2s ease;
-      }
-
-      .preview-content a:hover {
-        color: var(--accent-purple);
-        text-decoration: underline;
-      }
-
-      .preview-content hr {
-        border: none;
-        border-top: 1px solid var(--border-color);
-        margin: 1.5rem 0;
-      }
-
-      .preview-content table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 1.25rem 0;
-      }
-
-      .preview-content th,
-      .preview-content td {
-        border: 1px solid var(--border-color);
-        padding: 0.6rem 0.8rem;
-        text-align: left;
-      }
-
-      .preview-content th {
-        background: rgba(255, 255, 255, 0.04);
-        font-weight: 600;
-      }
-
-      /* Control & Sync Panel (Right sidebar) */
-      .sync-panel {
-        width: 340px;
-        background: var(--bg-sidebar);
-        border-left: 1px solid var(--border-color);
-        display: flex;
-        flex-direction: column;
-        flex-shrink: 0;
-        overflow-y: auto;
-      }
-
-      .panel-section {
-        padding: 1.5rem;
-        border-bottom: 1px solid var(--border-color);
-      }
-
-      .panel-section-title {
-        font-family: "Outfit", sans-serif;
-        font-weight: 700;
-        font-size: 0.95rem;
-        letter-spacing: 0.02em;
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: white;
-      }
-
-      .stats-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.75rem;
-      }
-
-      .stat-card {
-        background: rgba(0, 0, 0, 0.25);
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        padding: 0.75rem;
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-      }
-
-      .stat-val {
-        font-family: "Outfit", sans-serif;
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #ffffff;
-      }
-
-      .stat-lbl {
-        font-size: 0.7rem;
-        color: var(--text-muted);
-        text-transform: uppercase;
-      }
-
-      /* Git sync styling */
-      .git-flow {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-      }
-
-      .repo-card {
-        background: rgba(99, 102, 241, 0.04);
-        border: 1px solid rgba(99, 102, 241, 0.15);
-        border-radius: 8px;
-        padding: 0.85rem;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-      }
-
-      .repo-details {
-        display: flex;
-        flex-direction: column;
-        gap: 0.15rem;
-        font-size: 0.8rem;
-        overflow: hidden;
-      }
-
-      .repo-title {
-        font-weight: 600;
-        color: white;
-      }
-
-      .repo-url {
-        color: var(--text-muted);
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-      }
-
-      .git-terminal {
-        background: #020305;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 8px;
-        padding: 0.85rem;
-        font-family: "Fira Code", monospace;
-        font-size: 0.75rem;
-        color: #38bdf8;
-        position: relative;
-      }
-
-      .terminal-header {
-        display: flex;
-        justify-content: space-between;
-        color: var(--text-muted);
-        font-size: 0.7rem;
-        margin-bottom: 0.5rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        padding-bottom: 0.35rem;
-      }
-
-      .terminal-lines {
-        display: flex;
-        flex-direction: column;
-        gap: 0.35rem;
-        user-select: text;
-      }
-
-      .terminal-line {
-        display: flex;
-        gap: 0.5rem;
-      }
-
-      .terminal-prompt {
-        color: var(--accent-purple);
-        user-select: none;
-      }
-
-      .terminal-cmd {
-        color: #e2e8f0;
-      }
-
-      .terminal-comment {
-        color: #64748b;
-      }
-
-      .btn-copy {
+      /* Floating indicator above character head */
+      .hotspot::after {
+        content: "?";
         position: absolute;
-        right: 0.5rem;
-        top: 0.4rem;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        padding: 0.25rem;
-        border-radius: 4px;
-        cursor: pointer;
-        color: var(--text-secondary);
+        top: -15px;
+        background: var(--gradient-gold);
+        border: 1px solid #ffffff;
+        color: #0a080f;
+        font-family: "Outfit", sans-serif;
+        font-weight: 700;
+        font-size: 0.75rem;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.2s ease;
+        opacity: 0;
+        transform: translateY(5px);
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 10px rgba(247, 147, 30, 0.5);
       }
 
-      .btn-copy:hover {
-        background: rgba(255, 255, 255, 0.12);
-        color: white;
-      }
-
-      /* Notification Banner */
-      .toast {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        background: rgba(15, 17, 28, 0.9);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        padding: 1rem 1.25rem;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        transform: translateY(150%);
-        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        z-index: 100;
-        max-width: 350px;
-      }
-
-      .toast.show {
+      .hotspot:hover::after {
+        opacity: 1;
         transform: translateY(0);
       }
 
-      .toast-success {
-        border-color: rgba(16, 185, 129, 0.3);
-      }
-      .toast-info {
-        border-color: rgba(99, 102, 241, 0.3);
-      }
-      .toast-warning {
-        border-color: rgba(245, 158, 11, 0.3);
-      }
-      .toast-error {
-        border-color: rgba(239, 68, 68, 0.3);
-      }
-
-      .toast i {
-        font-size: 1.25rem;
-      }
-      .toast-success i {
-        color: var(--accent-green);
-      }
-      .toast-info i {
-        color: var(--accent-indigo);
-      }
-      .toast-warning i {
-        color: var(--accent-amber);
-      }
-      .toast-error i {
-        color: var(--accent-red);
+      /* VIEW 2: Cards Grid View */
+      .cards-view {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        padding: 2rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1.5rem;
+        align-content: start;
       }
 
-      .toast-content {
+      .hero-card {
+        background: rgba(15, 12, 23, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 14px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+      }
+
+      /* Golden borders for high rating characters */
+      .hero-card.legendary {
+        border-color: rgba(247, 147, 30, 0.45);
+        box-shadow: 0 0 15px rgba(247, 147, 30, 0.05);
+      }
+
+      .hero-card:hover {
+        transform: translateY(-8px) scale(1.03);
+        border-color: rgba(247, 147, 30, 0.6);
+        box-shadow:
+          0 12px 30px -5px rgba(0, 0, 0, 0.8),
+          0 0 20px rgba(247, 147, 30, 0.2);
+      }
+
+      .hero-card-img {
+        width: 100%;
+        aspect-ratio: 1/1.1;
+        background-image: url("assets/adventurers.jpg");
+        background-repeat: no-repeat;
+        position: relative;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      /* Dynamic Card crops */
+      .card-mage {
+        background-size: 550%;
+        background-position: 33% 26%;
+      }
+      .card-chrono {
+        background-size: 550%;
+        background-position: 64% 26%;
+      }
+      .card-ranger {
+        background-size: 550%;
+        background-position: 84% 24%;
+      }
+      .card-archer {
+        background-size: 450%;
+        background-position: 18% 70%;
+      }
+      .card-shinobi {
+        background-size: 450%;
+        background-position: 35% 64%;
+      }
+      .card-warrior {
+        background-size: 450%;
+        background-position: 50% 66%;
+      }
+      .card-paladin {
+        background-size: 450%;
+        background-position: 65% 64%;
+      }
+      .card-dragon {
+        background-size: 450%;
+        background-position: 84% 66%;
+      }
+
+      .card-glow-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(9, 8, 13, 0.9) 0%, transparent 40%);
+        pointer-events: none;
+      }
+
+      .card-badge {
+        position: absolute;
+        top: 0.75rem;
+        left: 0.75rem;
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 0.25rem 0.6rem;
+        border-radius: 9999px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--color-gold-light);
+      }
+
+      .hero-card-body {
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      .hero-card-name {
+        font-family: "Outfit", sans-serif;
+        font-weight: 700;
+        font-size: 1.05rem;
+        color: #ffffff;
+      }
+
+      .hero-card-title {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      /* RIGHT PANEL: Details Panel */
+      .details-panel {
+        width: 360px;
+        background: var(--bg-glass);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 1.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        flex-shrink: 0;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        position: relative;
+        overflow-y: auto;
+      }
+
+      @media (max-width: 1024px) {
+        .details-panel {
+          width: 100%;
+          max-height: 500px;
+        }
+      }
+
+      .detail-header {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 1.25rem;
+        position: relative;
+      }
+
+      .detail-badge {
+        align-self: flex-start;
+        background: var(--gradient-gold);
+        color: #0a080f;
+        font-family: "Outfit", sans-serif;
+        font-weight: 800;
+        font-size: 0.7rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .detail-name {
+        font-family: "Outfit", sans-serif;
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: white;
+      }
+
+      .detail-title {
+        font-family: "Cinzel", serif;
+        font-size: 0.85rem;
+        color: var(--color-gold-dark);
+        letter-spacing: 0.05em;
+      }
+
+      .detail-desc {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        line-height: 1.5;
+      }
+
+      .detail-section-title {
+        font-family: "Outfit", sans-serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: white;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        border-bottom: 1px dashed var(--border-color);
+        padding-bottom: 0.4rem;
+      }
+
+      /* Stats progress bar styling */
+      .stats-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .stat-row {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+      }
+
+      .stat-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+      }
+
+      .stat-bar-outer {
+        height: 6px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 9999px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.02);
+      }
+
+      .stat-bar-inner {
+        height: 100%;
+        background: var(--gradient-gold);
+        border-radius: 9999px;
+        width: 0%;
+        transition: width 0.8s cubic-bezier(0.1, 0.8, 0.2, 1);
+      }
+
+      /* Custom stat colors */
+      .stat-atk {
+        background: linear-gradient(90deg, #ef4444, #f87171);
+      }
+      .stat-def {
+        background: linear-gradient(90deg, #3b82f6, #60a5fa);
+      }
+      .stat-mag {
+        background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+      }
+      .stat-spd {
+        background: linear-gradient(90deg, #10b981, #34d399);
+      }
+
+      /* Ability list styling */
+      .abilities-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .ability-item {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        padding: 0.65rem 0.85rem;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .ability-icon {
+        width: 28px;
+        height: 28px;
+        background: rgba(247, 147, 30, 0.1);
+        border: 1px solid rgba(247, 147, 30, 0.25);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-gold-dark);
+        flex-shrink: 0;
+      }
+
+      .ability-details {
         display: flex;
         flex-direction: column;
         gap: 0.15rem;
       }
 
-      .toast-title {
+      .ability-name {
         font-family: "Outfit", sans-serif;
-        font-weight: 600;
         font-size: 0.85rem;
+        font-weight: 700;
         color: white;
       }
 
-      .toast-msg {
-        font-size: 0.75rem;
-        color: var(--text-secondary);
+      .ability-desc {
+        font-size: 0.7rem;
+        color: var(--text-muted);
       }
 
-      /* Guide screen when no directory or note is loaded */
-      .workspace-placeholder {
-        flex: 1;
+      /* Summon Guild Button */
+      .btn-summon {
+        background: var(--gradient-gold);
+        border: none;
+        color: #0d0a08;
+        padding: 0.85rem;
+        font-family: "Outfit", sans-serif;
+        font-weight: 800;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 15px rgba(247, 147, 30, 0.35);
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-top: auto;
+      }
+
+      .btn-summon:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(247, 147, 30, 0.5);
+      }
+
+      .btn-summon:active {
+        transform: translateY(0);
+      }
+
+      .empty-panel-state {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         text-align: center;
-        padding: 3rem;
-        gap: 1.5rem;
-      }
-
-      .hero-icon-wrapper {
-        width: 80px;
-        height: 80px;
-        border-radius: 24px;
-        background: rgba(99, 102, 241, 0.05);
-        border: 1px solid rgba(99, 102, 241, 0.15);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--accent-indigo);
-        margin-bottom: 0.5rem;
-        box-shadow: 0 8px 32px -8px rgba(99, 102, 241, 0.3);
-      }
-
-      .workspace-placeholder h2 {
-        font-family: "Outfit", sans-serif;
-        font-size: 1.8rem;
-        font-weight: 700;
-        background: var(--gradient-primary);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-
-      .workspace-placeholder p {
-        color: var(--text-secondary);
-        max-width: 480px;
-        line-height: 1.6;
-        font-size: 0.95rem;
-      }
-
-      .features-row {
-        display: flex;
-        gap: 1.5rem;
-        margin: 1rem 0;
-        max-width: 600px;
-      }
-
-      .feature-box {
-        flex: 1;
-        background: rgba(255, 255, 255, 0.02);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        padding: 1rem;
-        border-radius: 12px;
-        font-size: 0.8rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
-      .feature-box i {
-        color: var(--accent-purple);
-      }
-
-      .feature-box h4 {
-        color: white;
-        font-weight: 600;
-      }
-
-      .feature-box p {
+        height: 100%;
         color: var(--text-muted);
-        font-size: 0.75rem;
+        gap: 1rem;
+      }
+
+      .empty-panel-state i {
+        color: var(--color-gold-dark);
+        opacity: 0.6;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
       }
     </style>
   </head>
@@ -955,772 +803,435 @@
     <header>
       <div class="logo-container">
         <div class="logo-icon">
-          <i data-lucide="feather"></i>
+          <i data-lucide="shield"></i>
         </div>
-        <div class="logo">VaultWrite</div>
+        <div class="logo">Guild Portal</div>
       </div>
 
-      <div class="header-actions">
-        <a href="adventurers.html" class="btn btn-secondary">
-          <i data-lucide="gamepad-2"></i>
-          Adventurers Portal
-        </a>
-        <div id="status-badge" class="storage-badge fallback">
-          <span class="pulse"></span>
-          <span id="status-text">Web Sandbox Mode</span>
-        </div>
-        <button id="btn-select-dir" class="btn btn-secondary">
-          <i data-lucide="folder-open"></i>
-          Connect Local Folder
+      <div class="view-controls">
+        <button id="view-illus" class="btn-view active">
+          <i data-lucide="sparkles" size="14"></i>
+          Illustration View
+        </button>
+        <button id="view-cards" class="btn-view">
+          <i data-lucide="layers" size="14"></i>
+          Card Deck
         </button>
       </div>
     </header>
 
-    <div class="app-container">
-      <!-- Sidebar -->
-      <aside class="sidebar">
-        <div class="sidebar-search">
-          <div class="search-wrapper">
-            <i data-lucide="search" size="16"></i>
-            <input
-              type="text"
-              id="search-notes"
-              class="search-input"
-              placeholder="Search notes..."
-            />
+    <main class="title-container">
+      <h1 class="title-banner">The Legendary Adventurers Convene</h1>
+      <div class="title-subtitle">Guild Hero Selection Portal</div>
+    </main>
+
+    <section class="main-workspace">
+      <!-- Interactive View Screen -->
+      <div class="view-container">
+        <!-- View 1: Image Illustration with hotspots -->
+        <div id="illus-view" class="illustration-view">
+          <div class="illustration-wrapper">
+            <!-- 8 Hotspots -->
+            <div class="hotspot hs-mage" data-hero="mage">
+              <div class="magic-circle"></div>
+            </div>
+            <div class="hotspot hs-chrono" data-hero="chrono">
+              <div class="magic-circle"></div>
+            </div>
+            <div class="hotspot hs-ranger" data-hero="ranger">
+              <div class="magic-circle"></div>
+            </div>
+            <div class="hotspot hs-archer" data-hero="archer">
+              <div class="magic-circle"></div>
+            </div>
+            <div class="hotspot hs-shinobi" data-hero="shinobi">
+              <div class="magic-circle"></div>
+            </div>
+            <div class="hotspot hs-warrior" data-hero="warrior">
+              <div class="magic-circle"></div>
+            </div>
+            <div class="hotspot hs-paladin" data-hero="paladin">
+              <div class="magic-circle"></div>
+            </div>
+            <div class="hotspot hs-dragon" data-hero="dragon">
+              <div class="magic-circle"></div>
+            </div>
           </div>
         </div>
 
-        <div class="sidebar-actions">
-          <button id="btn-new-note" class="btn btn-primary" style="flex: 1">
-            <i data-lucide="plus" size="16"></i>
-            New Note
+        <!-- View 2: Cards grid -->
+        <div id="cards-view" class="cards-view" style="display: none">
+          <!-- Loaded by JS -->
+        </div>
+      </div>
+
+      <!-- Right detail inspect card -->
+      <aside class="details-panel" id="details-panel">
+        <div class="empty-panel-state" id="empty-state">
+          <i data-lucide="sword" size="48"></i>
+          <p style="font-size: 0.9rem">Select an adventurer to view stats, lore, and abilities.</p>
+        </div>
+
+        <div
+          id="detail-content"
+          style="display: none; height: 100%; flex-direction: column; gap: 1.5rem"
+        >
+          <div class="detail-header">
+            <span class="detail-badge" id="hero-badge">Legendary</span>
+            <h2 class="detail-name" id="hero-name">Eldrin</h2>
+            <div class="detail-title" id="hero-title">The Frost Archmage</div>
+          </div>
+
+          <p class="detail-desc" id="hero-desc">Lore details go here.</p>
+
+          <!-- Stats -->
+          <div>
+            <div class="detail-section-title">
+              <i data-lucide="bar-chart-2" size="14"></i>
+              <span>Combat Performance</span>
+            </div>
+            <div class="stats-list">
+              <div class="stat-row">
+                <div class="stat-info">
+                  <span>Attack Power</span>
+                  <span id="val-atk">0</span>
+                </div>
+                <div class="stat-bar-outer">
+                  <div class="stat-bar-inner stat-atk" id="bar-atk"></div>
+                </div>
+              </div>
+              <div class="stat-row">
+                <div class="stat-info">
+                  <span>Defense / Armor</span>
+                  <span id="val-def">0</span>
+                </div>
+                <div class="stat-bar-outer">
+                  <div class="stat-bar-inner stat-def" id="bar-def"></div>
+                </div>
+              </div>
+              <div class="stat-row">
+                <div class="stat-info">
+                  <span>Spell / Magic</span>
+                  <span id="val-mag">0</span>
+                </div>
+                <div class="stat-bar-outer">
+                  <div class="stat-bar-inner stat-mag" id="bar-mag"></div>
+                </div>
+              </div>
+              <div class="stat-row">
+                <div class="stat-info">
+                  <span>Speed / Agility</span>
+                  <span id="val-spd">0</span>
+                </div>
+                <div class="stat-bar-outer">
+                  <div class="stat-bar-inner stat-spd" id="bar-spd"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Abilities -->
+          <div>
+            <div class="detail-section-title">
+              <i data-lucide="zap" size="14"></i>
+              <span>Signature Skills</span>
+            </div>
+            <div class="abilities-list" id="abilities-list">
+              <!-- Loaded by JS -->
+            </div>
+          </div>
+
+          <button class="btn-summon" id="btn-summon-action">
+            <i data-lucide="sparkles"></i>
+            Summon Adventurer
           </button>
         </div>
-
-        <div class="notes-list" id="notes-list">
-          <!-- Populated by JS -->
-        </div>
       </aside>
-
-      <!-- Editor / Placeholder Workspace -->
-      <main id="editor-workspace" class="editor-workspace" style="display: none">
-        <div class="editor-toolbar">
-          <div class="active-file-info">
-            <i data-lucide="file-text" size="18" style="color: var(--accent-indigo)"></i>
-            <span id="active-file-title" class="active-file-title">welcome.md</span>
-            <div id="save-status" class="save-status">
-              <i data-lucide="cloud-off" size="12"></i>
-              <span>Local draft</span>
-            </div>
-          </div>
-          <div>
-            <button
-              id="btn-delete-active"
-              class="btn btn-secondary btn-icon"
-              title="Delete file"
-              style="color: var(--accent-red); border-color: rgba(239, 68, 68, 0.15)"
-            >
-              <i data-lucide="trash-2" size="16"></i>
-            </button>
-          </div>
-        </div>
-
-        <div class="pane-container">
-          <!-- Markdown Editor Pane -->
-          <section class="pane editor-pane">
-            <div class="pane-header">
-              <span>Markdown Editor</span>
-              <i data-lucide="code" size="14"></i>
-            </div>
-            <textarea
-              id="markdown-textarea"
-              class="markdown-textarea"
-              placeholder="# Heading 1&#10;&#10;Start typing markdown here..."
-            ></textarea>
-          </section>
-
-          <!-- Compiled Preview Pane -->
-          <section class="pane preview-pane">
-            <div class="pane-header">
-              <span>Live Preview</span>
-              <i data-lucide="eye" size="14"></i>
-            </div>
-            <div id="preview-content" class="preview-content">
-              <!-- Compiled markdown inserts here -->
-            </div>
-          </section>
-        </div>
-      </main>
-
-      <!-- Placeholder screen if no directory connected & no note selected -->
-      <section id="workspace-placeholder" class="workspace-placeholder">
-        <div class="hero-icon-wrapper">
-          <i data-lucide="feather" size="36"></i>
-        </div>
-        <h2>Welcome to VaultWrite</h2>
-        <p>
-          A secure, ultra-fast local editor that lets you write documents on your computer's storage
-          and upload them directly to your GitHub repository.
-        </p>
-
-        <div class="features-row">
-          <div class="feature-box">
-            <i data-lucide="hard-drive" size="20"></i>
-            <h4>Local Disk Storage</h4>
-            <p>Save notes directly as markdown (.md) files in your workspace folder.</p>
-          </div>
-          <div class="feature-box">
-            <i data-lucide="github" size="20"></i>
-            <h4>Git Integration Ready</h4>
-            <p>Keep your data in sync with your repositories on GitHub.</p>
-          </div>
-          <div class="feature-box">
-            <i data-lucide="shield-check" size="20"></i>
-            <h4>100% Privacy</h4>
-            <p>Your notes never touch third-party servers. Stored completely on your machine.</p>
-          </div>
-        </div>
-
-        <button id="btn-placeholder-connect" class="btn btn-primary">
-          <i data-lucide="folder-open"></i>
-          Connect Workspace Folder
-        </button>
-      </section>
-
-      <!-- Sync Panel -->
-      <aside class="sync-panel">
-        <!-- Document Stats Section -->
-        <div class="panel-section">
-          <div class="panel-section-title">
-            <i data-lucide="bar-chart-3" size="16"></i>
-            <span>Document Metrics</span>
-          </div>
-          <div class="stats-grid">
-            <div class="stat-card">
-              <span class="stat-val" id="stat-words">0</span>
-              <span class="stat-lbl">Words</span>
-            </div>
-            <div class="stat-card">
-              <span class="stat-val" id="stat-chars">0</span>
-              <span class="stat-lbl">Characters</span>
-            </div>
-            <div class="stat-card" style="grid-column: span 2">
-              <span class="stat-val" id="stat-read-time">0m</span>
-              <span class="stat-lbl">Est. Reading Time</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Git Sync Section -->
-        <div class="panel-section">
-          <div class="panel-section-title">
-            <i data-lucide="git-branch" size="16"></i>
-            <span>GitHub Sync Helper</span>
-          </div>
-          <div class="git-flow">
-            <div class="repo-card">
-              <i
-                data-lucide="github"
-                size="24"
-                style="color: var(--accent-indigo); flex-shrink: 0"
-              ></i>
-              <div class="repo-details">
-                <span class="repo-title">Gemini-Demo</span>
-                <span class="repo-url">cairns1105-cyber/Gemini-Demo</span>
-              </div>
-            </div>
-
-            <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4">
-              To upload your saved data from this computer to GitHub, open your terminal (PowerShell
-              or Git Bash) and run these commands:
-            </p>
-
-            <div class="git-terminal">
-              <div class="terminal-header">
-                <span>Git Sync Terminal</span>
-                <span>PowerShell</span>
-              </div>
-              <button class="btn-copy" id="btn-copy-terminal" title="Copy Commands">
-                <i data-lucide="copy" size="12"></i>
-              </button>
-              <div class="terminal-lines" id="git-commands-list">
-                <div class="terminal-line">
-                  <span class="terminal-prompt">&gt;</span>
-                  <span class="terminal-cmd">cd "c:\Users\sukol\OneDrive\Desktop\Gemini Demo"</span>
-                </div>
-                <div class="terminal-line">
-                  <span class="terminal-prompt">&gt;</span>
-                  <span class="terminal-cmd">git add .</span>
-                </div>
-                <div class="terminal-line">
-                  <span class="terminal-prompt">&gt;</span>
-                  <span class="terminal-cmd">git commit -m "Update notes via VaultWrite"</span>
-                </div>
-                <div class="terminal-line">
-                  <span class="terminal-prompt">&gt;</span>
-                  <span class="terminal-cmd">git push origin main</span>
-                </div>
-              </div>
-            </div>
-
-            <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem">
-              <button
-                id="btn-download-backup"
-                class="btn btn-secondary"
-                style="font-size: 0.75rem; justify-content: center"
-              >
-                <i data-lucide="download" size="14"></i>
-                Export All Data (JSON)
-              </button>
-            </div>
-          </div>
-        </div>
-      </aside>
-    </div>
-
-    <!-- Notification Toast -->
-    <div id="toast" class="toast toast-info">
-      <i id="toast-icon" data-lucide="info"></i>
-      <div class="toast-content">
-        <span id="toast-title" class="toast-title">Title</span>
-        <span id="toast-msg" class="toast-msg">Message body here.</span>
-      </div>
-    </div>
+    </section>
 
     <script>
       // Initialize Lucide Icons
       lucide.createIcons();
 
-      // State Management
-      let dirHandle = null;
-      let notes = []; // Holds arrays of { id, title, content, handle, lastModified }
-      let activeNoteId = null;
-      let isSaving = false;
-      let saveTimeout = null;
+      // View switcher elements
+      const btnIllus = document.getElementById("view-illus");
+      const btnCards = document.getElementById("view-cards");
+      const illusView = document.getElementById("illus-view");
+      const cardsView = document.getElementById("cards-view");
 
-      // DOM Elements
-      const btnSelectDir = document.getElementById("btn-select-dir");
-      const btnPlaceholderConnect = document.getElementById("btn-placeholder-connect");
-      const statusBadge = document.getElementById("status-badge");
-      const statusText = document.getElementById("status-text");
-      const notesList = document.getElementById("notes-list");
-      const searchNotes = document.getElementById("search-notes");
-      const btnNewNote = document.getElementById("btn-new-note");
+      // Profile inspect elements
+      const emptyState = document.getElementById("empty-state");
+      const detailContent = document.getElementById("detail-content");
+      const heroBadge = document.getElementById("hero-badge");
+      const heroName = document.getElementById("hero-name");
+      const heroTitle = document.getElementById("hero-title");
+      const heroDesc = document.getElementById("hero-desc");
+      const valAtk = document.getElementById("val-atk");
+      const valDef = document.getElementById("val-def");
+      const valMag = document.getElementById("val-mag");
+      const valSpd = document.getElementById("val-spd");
+      const barAtk = document.getElementById("bar-atk");
+      const barDef = document.getElementById("bar-def");
+      const barMag = document.getElementById("bar-mag");
+      const barSpd = document.getElementById("bar-spd");
+      const abilitiesList = document.getElementById("abilities-list");
+      const btnSummonAction = document.getElementById("btn-summon-action");
 
-      const editorWorkspace = document.getElementById("editor-workspace");
-      const workspacePlaceholder = document.getElementById("workspace-placeholder");
-      const activeFileTitle = document.getElementById("active-file-title");
-      const saveStatus = document.getElementById("save-status");
-      const markdownTextarea = document.getElementById("markdown-textarea");
-      const previewContent = document.getElementById("preview-content");
-      const btnDeleteActive = document.getElementById("btn-delete-active");
+      // Hero Database
+      const heroes = {
+        mage: {
+          name: "Zephyr",
+          title: "Archmage of the Frozen Veil",
+          role: "Frost Mage",
+          class: "card-mage",
+          desc: "Zephyr commands the absolute cold, conjuring towering glaciers to trap enemies and casting ice shards that shatter target shields instantly.",
+          stats: { atk: 60, def: 40, mag: 95, spd: 70 },
+          skills: [
+            {
+              name: "Glacial Spike",
+              desc: "Fires an icy shard dealing huge magical damage.",
+              icon: "wand-2",
+            },
+            {
+              name: "Blizzard Storm",
+              desc: "Slows and freezes all enemies in a designated circle.",
+              icon: "wind",
+            },
+          ],
+        },
+        chrono: {
+          name: "Kaelen",
+          title: "Weaver of Light and Shadow",
+          role: "Chrono Mage",
+          class: "card-chrono",
+          desc: "A mystic controlling the flow of space-time. Kaelen balances holy light spells and dark void energy to accelerate allies and implode enemy formations.",
+          stats: { atk: 50, def: 45, mag: 98, spd: 85 },
+          skills: [
+            {
+              name: "Time Warp",
+              desc: "Doubles speed and skill recovery rate for 8 seconds.",
+              icon: "clock",
+            },
+            {
+              name: "Void Singularity",
+              desc: "Pulls enemies together and detonates dark magic.",
+              icon: "orbit",
+            },
+          ],
+        },
+        ranger: {
+          name: "Sylvia",
+          title: "Guardian of the Wild Kin",
+          role: "Beast Ranger",
+          class: "card-ranger",
+          desc: "Sylvia fights in perfect harmony with the forest wild. Supported by her owl and bear companions, her wind-guided arrows never miss.",
+          stats: { atk: 80, def: 50, mag: 55, spd: 90 },
+          skills: [
+            { name: "Falcon Mark", desc: "Marks target, increasing critical damage.", icon: "eye" },
+            {
+              name: "Grizzly Guard",
+              desc: "Summons a spectral bear to absorb damage.",
+              icon: "shield-alert",
+            },
+          ],
+        },
+        archer: {
+          name: "Pip",
+          title: "Forest Shroom Scout",
+          role: "Mushroom Archer",
+          class: "card-archer",
+          desc: "Equipped with poison spore arrows and camouflaged in his large mushroom cap, Pip is a stealthy hunter who traps enemies off-guard.",
+          stats: { atk: 75, def: 35, mag: 45, spd: 95 },
+          skills: [
+            {
+              name: "Spore Cloud",
+              desc: "Blinds enemies and deals damage over time.",
+              icon: "cloud-fog",
+            },
+            {
+              name: "Numbing Arrow",
+              desc: "Pinpoint shot that immobilizes the target.",
+              icon: "target",
+            },
+          ],
+        },
+        shinobi: {
+          name: "Ren",
+          title: "Wraith of the Violet Clan",
+          role: "Shadow Shinobi",
+          class: "card-shinobi",
+          desc: "Ren blinks across the battlefield using shadow stepping. Wielding violet chakra blades, he strikes with deadly critical damage.",
+          stats: { atk: 90, def: 30, mag: 60, spd: 98 },
+          skills: [
+            { name: "Shadow Step", desc: "Blinks behind the furthest enemy target.", icon: "move" },
+            {
+              name: "Shuriken Storm",
+              desc: "Throws multiple exploding shadow shurikens.",
+              icon: "fan",
+            },
+          ],
+        },
+        warrior: {
+          name: "Garrick",
+          title: "The Unbreakable Bastion",
+          role: "Iron Warrior",
+          class: "card-warrior",
+          desc: "Clad in legendary spiky crimson armor, Garrick crushes frontline lines with massive sweeping claymore blows and iron defenses.",
+          stats: { atk: 85, def: 90, mag: 20, spd: 50 },
+          skills: [
+            {
+              name: "Heavy Cleave",
+              desc: "Sweeping strike dealing high damage to close enemies.",
+              icon: "swords",
+            },
+            {
+              name: "Bastion Stance",
+              desc: "Blocks all damage for a short duration.",
+              icon: "shield",
+            },
+          ],
+        },
+        paladin: {
+          name: "Aurelia",
+          title: "Champion of the Holy Light",
+          role: "Aegis Paladin",
+          class: "card-paladin",
+          desc: "Shielding her comrades with a crystalline aegis shield, Aurelia combines heavy physical defense with holy light recovery incantations.",
+          stats: { atk: 65, def: 95, mag: 70, spd: 55 },
+          skills: [
+            {
+              name: "Holy Shield",
+              desc: "Generates a barrier protecting allies from projectiles.",
+              icon: "shield-check",
+            },
+            {
+              name: "Light Sanctuary",
+              desc: "Creates a dome area that heals allies over time.",
+              icon: "heart",
+            },
+          ],
+        },
+        dragon: {
+          name: "Ignis",
+          title: "Lord of the Dragon Fire",
+          role: "Dragon Vanguard",
+          class: "card-dragon",
+          desc: "Harnessing ancient dragon flame, Ignis ignites his broadsword to unleash fiery slashes, moving with dragon-winged speed.",
+          stats: { atk: 95, def: 75, mag: 65, spd: 75 },
+          skills: [
+            {
+              name: "Inferno Cleave",
+              desc: "Engulfs the battlefield in burning flames.",
+              icon: "flame",
+            },
+            {
+              name: "Dragon Call",
+              desc: "Stuns enemies in an area with a roar.",
+              icon: "volume-2",
+            },
+          ],
+        },
+      };
 
-      const statWords = document.getElementById("stat-words");
-      const statChars = document.getElementById("stat-chars");
-      const statReadTime = document.getElementById("stat-read-time");
-      const btnCopyTerminal = document.getElementById("btn-copy-terminal");
-      const btnDownloadBackup = document.getElementById("btn-download-backup");
-
-      // Setup Event Listeners
-      btnSelectDir.addEventListener("click", selectDirectory);
-      btnPlaceholderConnect.addEventListener("click", selectDirectory);
-      btnNewNote.addEventListener("click", createNewNote);
-      searchNotes.addEventListener("input", renderNotesList);
-      markdownTextarea.addEventListener("input", handleEditorInput);
-      btnDeleteActive.addEventListener("click", deleteActiveNote);
-      btnCopyTerminal.addEventListener("click", copyGitCommands);
-      btnDownloadBackup.addEventListener("click", downloadAllBackup);
-
-      // Configure Marked Options
-      marked.setOptions({
-        gfm: true,
-        breaks: true,
-        headerIds: false,
-        mangle: false,
+      // Set view to Illustration
+      btnIllus.addEventListener("click", () => {
+        btnIllus.classList.add("active");
+        btnCards.classList.remove("active");
+        illusView.style.display = "flex";
+        cardsView.style.display = "none";
       });
 
-      // Show toast notification
-      function showToast(title, msg, type = "info") {
-        const toast = document.getElementById("toast");
-        const icon = document.getElementById("toast-icon");
-        const toastTitle = document.getElementById("toast-title");
-        const toastMsg = document.getElementById("toast-msg");
+      // Set view to Cards Grid
+      btnCards.addEventListener("click", () => {
+        btnCards.classList.add("active");
+        btnIllus.classList.remove("active");
+        illusView.style.display = "none";
+        cardsView.style.display = "grid";
+        renderCards();
+      });
 
-        toast.className = `toast toast-${type}`;
+      // Render Cards in Grid
+      function renderCards() {
+        cardsView.innerHTML = "";
+        Object.entries(heroes).forEach(([id, hero]) => {
+          const card = document.createElement("div");
+          card.className = "hero-card legendary";
+          card.innerHTML = `
+            <div class="hero-card-img ${hero.class}">
+              <div class="card-glow-overlay"></div>
+              <div class="card-badge">${hero.role}</div>
+            </div>
+            <div class="hero-card-body">
+              <span class="hero-card-name">${hero.name}</span>
+              <span class="hero-card-title">${hero.title}</span>
+            </div>
+          `;
+          card.addEventListener("click", () => inspectHero(id));
+          cardsView.appendChild(card);
+        });
+      }
 
-        let iconName = "info";
-        if (type === "success") iconName = "check-circle";
-        if (type === "warning") iconName = "alert-triangle";
-        if (type === "error") iconName = "x-circle";
+      // Bind Hotspot Click actions
+      document.querySelectorAll(".hotspot").forEach((el) => {
+        el.addEventListener("click", () => {
+          const id = el.getAttribute("data-hero");
+          inspectHero(id);
+        });
+      });
 
-        icon.setAttribute("data-lucide", iconName);
-        toastTitle.textContent = title;
-        toastMsg.textContent = msg;
+      // Show details for a specific hero
+      function inspectHero(id) {
+        const hero = heroes[id];
+        if (!hero) return;
 
-        lucide.createIcons();
+        // Hide empty state and show content
+        emptyState.style.display = "none";
+        detailContent.style.display = "flex";
 
-        toast.classList.add("show");
+        // Load content
+        heroName.textContent = hero.name;
+        heroTitle.textContent = hero.title;
+        heroBadge.textContent = hero.role;
+        heroDesc.textContent = hero.desc;
+
+        valAtk.textContent = hero.stats.atk;
+        valDef.textContent = hero.stats.def;
+        valMag.textContent = hero.stats.mag;
+        valSpd.textContent = hero.stats.spd;
+
+        // Animate stats bars
         setTimeout(() => {
-          toast.classList.remove("show");
-        }, 4000);
-      }
+          barAtk.style.width = `${hero.stats.atk}%`;
+          barDef.style.width = `${hero.stats.def}%`;
+          barMag.style.width = `${hero.stats.mag}%`;
+          barSpd.style.width = `${hero.stats.spd}%`;
+        }, 50);
 
-      // Read notes from Selected Directory
-      async function selectDirectory() {
-        try {
-          if (!window.showDirectoryPicker) {
-            showToast(
-              "API Not Supported",
-              "File System Access API is not supported in this browser. Running in local sandbox fallback mode.",
-              "warning"
-            );
-            initSandboxMode();
-            return;
-          }
-
-          dirHandle = await window.showDirectoryPicker({
-            mode: "readwrite",
-          });
-
-          // Verify permission
-          const options = { mode: "readwrite" };
-          if ((await dirHandle.queryPermission(options)) !== "granted") {
-            if ((await dirHandle.requestPermission(options)) !== "granted") {
-              showToast(
-                "Permission Denied",
-                "Write permission is required to save notes to your hard drive.",
-                "error"
-              );
-              return;
-            }
-          }
-
-          // Read markdown files
-          notes = [];
-          for await (const entry of dirHandle.values()) {
-            if (entry.kind === "file" && entry.name.endsWith(".md")) {
-              const file = await entry.getFile();
-              const text = await file.text();
-              notes.push({
-                id: entry.name,
-                title: entry.name.replace(/\.md$/, ""),
-                content: text,
-                handle: entry,
-                lastModified: file.lastModified,
-              });
-            }
-          }
-
-          // Sort by last modified date (newest first)
-          notes.sort((a, b) => b.lastModified - a.lastModified);
-
-          updateStorageUI(true);
-          renderNotesList();
-          showToast(
-            "Folder Connected",
-            `Loaded ${notes.length} markdown files from your storage.`,
-            "success"
-          );
-
-          // Select first note if any exist
-          if (notes.length > 0) {
-            selectNote(notes[0].id);
-          } else {
-            showPlaceholder();
-          }
-        } catch (err) {
-          console.error(err);
-          if (err.name !== "AbortError") {
-            showToast(
-              "Connection Error",
-              "Could not open selected folder. Running in sandbox mode.",
-              "error"
-            );
-            initSandboxMode();
-          }
-        }
-      }
-
-      // LocalStorage Sandbox Mode (Fallback)
-      function initSandboxMode() {
-        dirHandle = null;
-        updateStorageUI(false);
-
-        const localData = localStorage.getItem("vaultwrite_sandbox_notes");
-        if (localData) {
-          try {
-            notes = JSON.parse(localData);
-          } catch (e) {
-            notes = [];
-          }
-        } else {
-          // Add default welcome note
-          notes = [
-            {
-              id: "welcome_note",
-              title: "Welcome to VaultWrite",
-              content: `# Welcome to VaultWrite ✍️\n\nThis app allows you to create markdown files stored on your local computer.\n\n### Running in Sandbox Mode\nSince you are using sandbox mode, your files are saved in the browser's \`localStorage\`. To write directly to files in your repository folder, click **Connect Local Folder** in the top right.\n\n### How to sync to GitHub:\n1. Keep your notes inside your local repository folder.\n2. Run the Git commands listed in the right-side sync helper.`,
-              lastModified: Date.now(),
-            },
-          ];
-          saveSandboxNotes();
-        }
-
-        renderNotesList();
-        if (notes.length > 0) {
-          selectNote(notes[0].id);
-        } else {
-          showPlaceholder();
-        }
-      }
-
-      function saveSandboxNotes() {
-        localStorage.setItem("vaultwrite_sandbox_notes", JSON.stringify(notes));
-      }
-
-      function updateStorageUI(connected) {
-        if (connected) {
-          statusBadge.className = "storage-badge connected";
-          statusText.textContent = "Connected Folder";
-          btnSelectDir.innerHTML = '<i data-lucide="check"></i> Connected';
-          btnSelectDir.className = "btn btn-secondary";
-        } else {
-          statusBadge.className = "storage-badge fallback";
-          statusText.textContent = "Web Sandbox Mode";
-          btnSelectDir.innerHTML = '<i data-lucide="folder-open"></i> Connect Folder';
-          btnSelectDir.className = "btn btn-secondary";
-        }
-        lucide.createIcons();
-      }
-
-      // Render List of Notes in Sidebar
-      function renderNotesList() {
-        const query = searchNotes.value.toLowerCase();
-        notesList.innerHTML = "";
-
-        const filteredNotes = notes.filter(
-          (n) => n.title.toLowerCase().includes(query) || n.content.toLowerCase().includes(query)
-        );
-
-        if (filteredNotes.length === 0) {
-          notesList.innerHTML = `
-            <div class="empty-state">
-              <i data-lucide="folder-search" size="24"></i>
-              <p style="font-size: 0.8rem;">No notes found</p>
-            </div>
-          `;
-          lucide.createIcons();
-          return;
-        }
-
-        filteredNotes.forEach((note) => {
+        // Load skills
+        abilitiesList.innerHTML = "";
+        hero.skills.forEach((skill) => {
           const item = document.createElement("div");
-          item.className = `note-item ${note.id === activeNoteId ? "active" : ""}`;
-          item.addEventListener("click", () => selectNote(note.id));
-
-          // Simple snippet extraction
-          const cleanText = note.content.replace(/[#*`\-_[\]]/g, "").trim();
-          const snippet = cleanText.substring(0, 50) || "Empty document";
-          const dateStr = new Date(note.lastModified).toLocaleDateString(undefined, {
-            month: "short",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          });
-
+          item.className = "ability-item";
           item.innerHTML = `
-            <div class="note-item-header">
-              <span class="note-item-title">${note.title}</span>
-              <button class="note-item-delete" data-id="${note.id}" title="Delete file">
-                <i data-lucide="trash-2" size="14"></i>
-              </button>
+            <div class="ability-icon">
+              <i data-lucide="${skill.icon}" size="16"></i>
             </div>
-            <span class="note-item-snippet">${snippet}</span>
-            <div class="note-item-meta">
-              <span>${dateStr}</span>
-              <span>${dirHandle ? ".md file" : "sandbox"}</span>
+            <div class="ability-details">
+              <span class="ability-name">${skill.name}</span>
+              <span class="ability-desc">${skill.desc}</span>
             </div>
           `;
-
-          // Bind delete action
-          item.querySelector(".note-item-delete").addEventListener("click", (e) => {
-            e.stopPropagation();
-            const id = e.currentTarget.getAttribute("data-id");
-            deleteNote(id);
-          });
-
-          notesList.appendChild(item);
+          abilitiesList.appendChild(item);
         });
 
+        // Setup Summon click action
+        btnSummonAction.innerHTML = `<i data-lucide="sparkles"></i> Summon ${hero.name}`;
+        btnSummonAction.onclick = () => {
+          alert(`${hero.name} has joined your guild!`);
+        };
+
         lucide.createIcons();
       }
-
-      // Select and display a note
-      async function selectNote(id) {
-        activeNoteId = id;
-        const note = notes.find((n) => n.id === id);
-        if (!note) return;
-
-        // Visual toggle
-        workspacePlaceholder.style.display = "none";
-        editorWorkspace.style.display = "flex";
-
-        activeFileTitle.textContent = dirHandle ? note.id : `${note.title}.md`;
-        markdownTextarea.value = note.content;
-
-        updateSaveStatusIndicator(true);
-        updatePreview();
-        updateMetrics();
-
-        // Highlight active sidebar item
-        document.querySelectorAll(".note-item").forEach((el) => el.classList.remove("active"));
-        renderNotesList();
-      }
-
-      // Create a New Note
-      async function createNewNote() {
-        let title = prompt("Enter note title:");
-        if (!title) return;
-        title = title.trim();
-        if (!title) return;
-
-        // Enforce valid filename characteristics
-        title = title.replace(/[\/\\?%*:|"<>\.]/g, "-");
-        const filename = `${title}.md`;
-
-        // Check duplicates
-        if (notes.some((n) => n.title.toLowerCase() === title.toLowerCase())) {
-          showToast("Title Exists", "A note with that name already exists.", "warning");
-          return;
-        }
-
-        const initialContent = `# ${title}\n\nStart writing your note...`;
-
-        if (dirHandle) {
-          try {
-            // Write direct to file picker folder
-            const fileHandle = await dirHandle.getFileHandle(filename, { create: true });
-            const writable = await fileHandle.createWritable();
-            await writable.write(initialContent);
-            await writable.close();
-
-            const newNote = {
-              id: filename,
-              title: title,
-              content: initialContent,
-              handle: fileHandle,
-              lastModified: Date.now(),
-            };
-
-            notes.unshift(newNote);
-            renderNotesList();
-            selectNote(newNote.id);
-            showToast("File Created", `Saved ${filename} to disk.`, "success");
-          } catch (err) {
-            console.error(err);
-            showToast("Save Error", "Could not create file on disk.", "error");
-          }
-        } else {
-          // Sandbox local storage mode
-          const newNote = {
-            id: `note_${Date.now()}`,
-            title: title,
-            content: initialContent,
-            lastModified: Date.now(),
-          };
-
-          notes.unshift(newNote);
-          saveSandboxNotes();
-          renderNotesList();
-          selectNote(newNote.id);
-          showToast("Draft Created", "Created new note in sandbox.", "success");
-        }
-      }
-
-      // Delete a Note
-      async function deleteNote(id) {
-        if (!confirm("Are you sure you want to delete this note? This action cannot be undone.")) {
-          return;
-        }
-
-        const noteIndex = notes.findIndex((n) => n.id === id);
-        if (noteIndex === -1) return;
-
-        const note = notes[noteIndex];
-
-        if (dirHandle) {
-          try {
-            await dirHandle.removeEntry(note.id);
-            notes.splice(noteIndex, 1);
-            showToast("File Deleted", `${note.id} removed from disk.`, "success");
-          } catch (err) {
-            console.error(err);
-            showToast("Delete Error", "Could not delete file from disk.", "error");
-            return;
-          }
-        } else {
-          notes.splice(noteIndex, 1);
-          saveSandboxNotes();
-          showToast("Draft Deleted", "Removed note from sandbox.", "success");
-        }
-
-        renderNotesList();
-
-        if (activeNoteId === id) {
-          if (notes.length > 0) {
-            selectNote(notes[0].id);
-          } else {
-            showPlaceholder();
-          }
-        }
-      }
-
-      function deleteActiveNote() {
-        if (activeNoteId) {
-          deleteNote(activeNoteId);
-        }
-      }
-
-      function showPlaceholder() {
-        activeNoteId = null;
-        workspacePlaceholder.style.display = "flex";
-        editorWorkspace.style.display = "none";
-
-        statWords.textContent = "0";
-        statChars.textContent = "0";
-        statReadTime.textContent = "0m";
-      }
-
-      // Handling editor keyboard inputs with autosave debounce
-      function handleEditorInput() {
-        const note = notes.find((n) => n.id === activeNoteId);
-        if (!note) return;
-
-        note.content = markdownTextarea.value;
-        note.lastModified = Date.now();
-
-        updateSaveStatusIndicator(false);
-        updatePreview();
-        updateMetrics();
-
-        // Autosave debounce
-        clearTimeout(saveTimeout);
-        saveTimeout = setTimeout(() => {
-          saveActiveNoteContent();
-        }, 800);
-      }
-
-      // Save Note Content to Storage
-      async function saveActiveNoteContent() {
-        const note = notes.find((n) => n.id === activeNoteId);
-        if (!note) return;
-
-        if (dirHandle && note.handle) {
-          try {
-            isSaving = true;
-            const writable = await note.handle.createWritable();
-            await writable.write(note.content);
-            await writable.close();
-
-            updateSaveStatusIndicator(true);
-            isSaving = false;
-          } catch (err) {
-            console.error(err);
-            showToast(
-              "Autosave Error",
-              "Failed to save changes to disk. Verify folder permissions.",
-              "error"
-            );
-            saveStatus.innerHTML =
-              '<i data-lucide="alert-circle" size="12" style="color: var(--accent-red)"></i> <span style="color: var(--accent-red)">Write Failed</span>';
-            lucide.createIcons();
-          }
-        } else {
-          // Sandbox Mode saving
-          saveSandboxNotes();
-          updateSaveStatusIndicator(true);
-        }
-      }
-
-      // Update save status UI text
-      function updateSaveStatusIndicator(isSaved) {
-        if (isSaved) {
-          saveStatus.className = "save-status saved";
-          saveStatus.innerHTML = dirHandle
-            ? '<i data-lucide="check-circle-2" size="12"></i> <span>Saved to disk</span>'
-            : '<i data-lucide="check" size="12"></i> <span>Saved to sandbox</span>';
-        } else {
-          saveStatus.className = "save-status";
-          saveStatus.innerHTML =
-            '<i data-lucide="loader" size="12" style="animation: spin 1s linear infinite;"></i> <span>Saving...</span>';
-        }
-        lucide.createIcons();
-      }
-
-      // Render Markdown preview
-      function updatePreview() {
-        const content = markdownTextarea.value;
-        previewContent.innerHTML = marked.parse(content);
-      }
-
-      // Document Statistics Calculations
-      function updateMetrics() {
-        const text = markdownTextarea.value.trim();
-        if (!text) {
-          statWords.textContent = "0";
-          statChars.textContent = "0";
-          statReadTime.textContent = "0m";
-          return;
-        }
-
-        const words = text.split(/\s+/).filter((word) => word.length > 0).length;
-        const chars = text.length;
-        const wpm = 200; // average reading speed
-        const minutes = Math.ceil(words / wpm);
-
-        statWords.textContent = words.toLocaleString();
-        statChars.textContent = chars.toLocaleString();
-        statReadTime.textContent = `${minutes}m`;
-      }
-
-      // Copy terminal commands to clipboard
-      function copyGitCommands() {
-        const commands = [
-          'cd "c:\\Users\\sukol\\OneDrive\\Desktop\\Gemini Demo"',
-          "git add .",
-          'git commit -m "Update notes via VaultWrite"',
-          "git push origin main",
-        ].join("\n");
-
-        navigator.clipboard
-          .writeText(commands)
-          .then(() => {
-            showToast("Copied to Clipboard", "Git commands copied successfully.", "success");
-          })
-          .catch((err) => {
-            showToast("Copy Failed", "Unable to copy text.", "error");
-          });
-      }
-
-      // Download backup JSON
-      function downloadAllBackup() {
-        const dataStr =
-          "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(notes, null, 2));
-        const downloadAnchor = document.createElement("a");
-        downloadAnchor.setAttribute("href", dataStr);
-        downloadAnchor.setAttribute("download", "vaultwrite_notes_backup.json");
-        document.body.appendChild(downloadAnchor);
-        downloadAnchor.click();
-        downloadAnchor.remove();
-        showToast("Backup Exported", "All notes downloaded as JSON backup.", "success");
-      }
-
-      // Page initialisation
-      window.addEventListener("DOMContentLoaded", () => {
-        // Fallback automatically to LocalStorage sandbox mode on start
-        initSandboxMode();
-      });
     </script>
   </body>
 </html>
